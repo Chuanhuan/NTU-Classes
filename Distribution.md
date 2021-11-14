@@ -56,6 +56,14 @@ $$
 \end{array}
 $$
 
+- however, jupyter note book use `align` insead of `aligned`
+$$
+\begin{aligned}
+a&=b+c \\
+d+e&=a
+\end{aligned}
+$$
+
 | Syntax      | Description | Test Text     |
 | :---        |    :----:   |          ---: |
 | Header      | Title       | Here's this   |
