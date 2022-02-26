@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>hw1-unfinish</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>hw1-jack</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 
 
 
@@ -15063,7 +15063,7 @@ dtype: float64
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre>/tmp/ipykernel_487/425235944.py:12: DeprecationWarning: The default dtype for empty Series will be &#39;object&#39; instead of &#39;float64&#39; in a future version. Specify a dtype explicitly to silence this warning.
+<pre>/tmp/ipykernel_26361/425235944.py:12: DeprecationWarning: The default dtype for empty Series will be &#39;object&#39; instead of &#39;float64&#39; in a future version. Specify a dtype explicitly to silence this warning.
   exp = pd.Series()
 </pre>
 </div>
@@ -15359,7 +15359,7 @@ Reject H_0
 
 
 <div class="jp-RenderedImage jp-OutputArea-output ">
-<img src="data:image/png;base64,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"
+<img src="data:image/png;base64,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"
 >
 </div>
 
@@ -15383,7 +15383,9 @@ Reject H_0
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># q12</span>
 <span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="k">def</span> <span class="nf">card_steps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+
+
+<span class="k">def</span> <span class="nf">card_steps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span> <span class="c1"># x is start position</span>
     <span class="n">steps</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">tmp</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">while</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">data</span><span class="o">.</span><span class="fm">__len__</span><span class="p">():</span>
@@ -15398,41 +15400,32 @@ Reject H_0
 </div>
 </div>
 
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">num_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span> <span class="k">if</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">11</span> <span class="ow">or</span> <span class="n">y</span><span class="o">==</span> <span class="mi">12</span> <span class="ow">or</span> <span class="n">y</span><span class="o">==</span> <span class="mi">13</span> <span class="k">else</span> <span class="n">y</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">14</span><span class="p">)]</span>
-<span class="n">a</span> <span class="o">=</span> <span class="n">num_list</span><span class="o">*</span><span class="mi">4</span> 
-<span class="n">data1</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="mi">52</span><span class="p">)</span>
-
-<span class="n">a</span> <span class="o">=</span> <span class="n">num_list</span><span class="o">*</span><span class="mi">8</span>
-<span class="n">data2</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="mi">104</span><span class="p">)</span>
-
-<span class="c1"># print(&#39;This is for 52 cards&#39;)</span>
-<span class="n">card_steps</span><span class="p">(</span><span class="n">data2</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">k</span> <span class="o">=</span> <span class="p">[]</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># test only</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-    <span class="n">k</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">card_steps</span><span class="p">(</span><span class="n">data2</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">num_list</span><span class="o">*</span><span class="mi">8</span>
-    <span class="n">data2</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="mi">104</span><span class="p">)</span>
-<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">/</span><span class="mi">100</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># q12a</span>
+<span class="c1"># verify the start steps</span>
+<span class="n">steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">)]</span>  <span class="c1"># specific picks from starts</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">num_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span> <span class="k">if</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">11</span> <span class="ow">or</span> <span class="n">y</span><span class="o">==</span> <span class="mi">12</span> <span class="ow">or</span> <span class="n">y</span><span class="o">==</span> <span class="mi">13</span> <span class="k">else</span> <span class="n">y</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">14</span><span class="p">)]</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">num_list</span><span class="o">*</span><span class="mi">4</span> 
+    <span class="n">data1</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="mi">52</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">card_steps</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="n">x</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="c1"># print(i, output)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">i</span><span class="p">:</span><span class="n">output</span><span class="p">})</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">result</span><span class="p">,</span><span class="n">df</span><span class="p">],</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1">#df = pd.DataFrame(output , columns=[i])</span>
+    <span class="c1">#result.insert(i,i, output) # warring messege show poor performace</span>
+    <span class="c1">#print(&#39;When the start steps is&#39;, x , &#39;, the position and frequency are \n &#39;, df.groupby(&#39;a&#39;).size()/n)</span>
+<span class="n">result</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">()</span> <span class="c1"># show first 5 rows</span>
 </pre></div>
 
      </div>
@@ -15481,237 +15474,73 @@ Reject H_0
       <th>7</th>
       <th>8</th>
       <th>9</th>
-      <th>10</th>
-      <th>11</th>
-      <th>12</th>
-      <th>13</th>
-      <th>14</th>
-      <th>15</th>
-      <th>16</th>
-      <th>17</th>
-      <th>18</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.1</td>
-      <td>0.16</td>
-      <td>0.19</td>
-      <td>0.24</td>
-      <td>0.31</td>
-      <td>0.36</td>
-      <td>0.42</td>
-      <td>0.43</td>
-      <td>0.51</td>
-      <td>0.52</td>
-      <td>0.55</td>
-      <td>0.56</td>
-      <td>0.62</td>
-      <td>0.67</td>
-      <td>0.77</td>
-      <td>0.82</td>
-      <td>0.91</td>
-      <td>0.94</td>
-      <td>0.99</td>
+      <td>49</td>
+      <td>49</td>
+      <td>51</td>
+      <td>51</td>
+      <td>51</td>
+      <td>51</td>
+      <td>49</td>
+      <td>51</td>
+      <td>51</td>
+      <td>51</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.1</td>
-      <td>0.18</td>
-      <td>0.27</td>
-      <td>0.33</td>
-      <td>0.37</td>
-      <td>0.47</td>
-      <td>0.55</td>
-      <td>0.61</td>
-      <td>0.66</td>
-      <td>0.72</td>
-      <td>0.79</td>
-      <td>0.84</td>
-      <td>0.89</td>
-      <td>0.94</td>
-      <td>1.02</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
+      <td>48</td>
+      <td>50</td>
+      <td>48</td>
+      <td>48</td>
+      <td>48</td>
+      <td>50</td>
+      <td>50</td>
+      <td>48</td>
+      <td>50</td>
+      <td>50</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.1</td>
-      <td>0.15</td>
-      <td>0.23</td>
-      <td>0.32</td>
-      <td>0.35</td>
-      <td>0.43</td>
-      <td>0.48</td>
-      <td>0.52</td>
-      <td>0.62</td>
-      <td>0.72</td>
-      <td>0.82</td>
-      <td>0.87</td>
-      <td>0.93</td>
-      <td>1.00</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
+      <td>48</td>
+      <td>48</td>
+      <td>48</td>
+      <td>50</td>
+      <td>50</td>
+      <td>48</td>
+      <td>48</td>
+      <td>48</td>
+      <td>50</td>
+      <td>48</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.1</td>
-      <td>0.17</td>
-      <td>0.22</td>
-      <td>0.27</td>
-      <td>0.32</td>
-      <td>0.37</td>
-      <td>0.42</td>
-      <td>0.46</td>
-      <td>0.50</td>
-      <td>0.56</td>
-      <td>0.66</td>
-      <td>0.68</td>
-      <td>0.77</td>
-      <td>0.78</td>
-      <td>0.87</td>
-      <td>0.94</td>
-      <td>0.96</td>
-      <td>NaN</td>
-      <td>NaN</td>
+      <td>46</td>
+      <td>46</td>
+      <td>46</td>
+      <td>46</td>
+      <td>46</td>
+      <td>46</td>
+      <td>46</td>
+      <td>46</td>
+      <td>46</td>
+      <td>46</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.1</td>
-      <td>0.13</td>
-      <td>0.18</td>
-      <td>0.23</td>
-      <td>0.33</td>
-      <td>0.35</td>
-      <td>0.36</td>
-      <td>0.38</td>
-      <td>0.43</td>
-      <td>0.48</td>
-      <td>0.58</td>
-      <td>0.67</td>
-      <td>0.68</td>
-      <td>0.71</td>
-      <td>0.80</td>
-      <td>0.83</td>
-      <td>0.90</td>
-      <td>1.00</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>0.1</td>
-      <td>0.14</td>
-      <td>0.20</td>
-      <td>0.27</td>
-      <td>0.32</td>
-      <td>0.34</td>
-      <td>0.42</td>
-      <td>0.43</td>
-      <td>0.50</td>
-      <td>0.52</td>
-      <td>0.61</td>
-      <td>0.67</td>
-      <td>0.68</td>
-      <td>0.73</td>
-      <td>0.83</td>
-      <td>0.89</td>
-      <td>0.99</td>
-      <td>1.03</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>0.1</td>
-      <td>0.15</td>
-      <td>0.20</td>
-      <td>0.25</td>
-      <td>0.30</td>
-      <td>0.39</td>
-      <td>0.43</td>
-      <td>0.49</td>
-      <td>0.58</td>
-      <td>0.63</td>
-      <td>0.66</td>
-      <td>0.68</td>
-      <td>0.75</td>
-      <td>0.80</td>
-      <td>0.90</td>
-      <td>0.92</td>
-      <td>0.95</td>
-      <td>1.00</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>0.1</td>
-      <td>0.18</td>
-      <td>0.21</td>
-      <td>0.26</td>
-      <td>0.30</td>
-      <td>0.39</td>
-      <td>0.44</td>
-      <td>0.52</td>
-      <td>0.57</td>
-      <td>0.59</td>
-      <td>0.63</td>
-      <td>0.68</td>
-      <td>0.74</td>
-      <td>0.80</td>
-      <td>0.85</td>
-      <td>0.88</td>
-      <td>0.93</td>
-      <td>1.00</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>0.1</td>
-      <td>0.17</td>
-      <td>0.23</td>
-      <td>0.25</td>
-      <td>0.30</td>
-      <td>0.35</td>
-      <td>0.40</td>
-      <td>0.43</td>
-      <td>0.51</td>
-      <td>0.61</td>
-      <td>0.69</td>
-      <td>0.78</td>
-      <td>0.82</td>
-      <td>0.85</td>
-      <td>0.87</td>
-      <td>0.95</td>
-      <td>1.00</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>0.1</td>
-      <td>0.13</td>
-      <td>0.18</td>
-      <td>0.19</td>
-      <td>0.24</td>
-      <td>0.34</td>
-      <td>0.41</td>
-      <td>0.46</td>
-      <td>0.56</td>
-      <td>0.65</td>
-      <td>0.70</td>
-      <td>0.78</td>
-      <td>0.83</td>
-      <td>0.88</td>
-      <td>0.94</td>
-      <td>1.01</td>
-      <td>1.02</td>
-      <td>NaN</td>
-      <td>NaN</td>
+      <td>47</td>
+      <td>47</td>
+      <td>47</td>
+      <td>47</td>
+      <td>48</td>
+      <td>47</td>
+      <td>47</td>
+      <td>48</td>
+      <td>47</td>
+      <td>48</td>
     </tr>
   </tbody>
 </table>
@@ -15730,25 +15559,99 @@ Reject H_0
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># q12a</span>
-<span class="c1"># verify the start steps</span>
-<span class="n">steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">)]</span>  <span class="c1"># specific picks from starts</span>
-<span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">n</span> <span class="o">=</span> <span class="mi">10000</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">prob_max</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">prob_max</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">())</span><span class="o">/</span><span class="mi">10</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The max prob in same position is &#39;</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">prob_max</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The min prob in same position is &#39;</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">prob_max</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The frequency is </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">prob_max</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">prob_max</span><span class="p">)</span><span class="o">.</span><span class="n">hist</span><span class="p">()</span>
+</pre></div>
 
-<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-        <span class="n">num_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span> <span class="k">if</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">11</span> <span class="ow">or</span> <span class="n">y</span><span class="o">==</span> <span class="mi">12</span> <span class="ow">or</span> <span class="n">y</span><span class="o">==</span> <span class="mi">13</span> <span class="k">else</span> <span class="n">y</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">14</span><span class="p">)]</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="n">num_list</span><span class="o">*</span><span class="mi">4</span> 
-        <span class="n">data1</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="mi">52</span><span class="p">)</span>
-        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">card_steps</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="n">x</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+     </div>
+</div>
+</div>
+</div>
 
-    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">output</span> <span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">])</span>
+<div class="jp-Cell-outputWrapper">
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;When the start steps is&#39;</span><span class="p">,</span> <span class="n">x</span> <span class="p">,</span> <span class="s1">&#39;, the position and frequency are </span><span class="se">\n</span><span class="s1"> &#39;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">/</span><span class="n">n</span><span class="p">)</span>
-    <span class="c1"># The start steps in [1:10], this data will stop at card position [42, 51].</span>
-    <span class="c1"># The highest prob is around .18 when card position in 51.</span>
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>The max prob in same position is  1.0
+The min prob in same position is  0.4
+The frequency is 
+ 1.0    5615
+0.6    1017
+0.8     971
+0.7     957
+0.9     840
+0.5     556
+0.4      44
+dtype: int64
+</pre>
+</div>
+</div>
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>&lt;AxesSubplot:&gt;</pre>
+</div>
+
+</div>
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+<div class="jp-RenderedImage jp-OutputArea-output ">
+<img src="data:image/png;base64,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"
+>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="q12a-Results">q12a Results<a class="anchor-link" href="#q12a-Results">&#182;</a></h2><ol>
+<li>No matter change the steps, most of time will end in same position in every run.</li>
+<li>If we want to check 10000 runs and find the frequency of position will stop in  the experiments as below:</li>
+</ol>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">/</span><span class="n">n</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;When the start steps is&#39;</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span> <span class="p">,</span> <span class="s1">&#39;, the position and frequency are </span><span class="se">\n</span><span class="s1"> &#39;</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+<span class="c1">#result</span>
 </pre></div>
 
      </div>
@@ -15769,263 +15672,134 @@ Reject H_0
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>When the start steps is 1 , the position and frequency are 
-  a
-42    0.0137
-43    0.0314
-44    0.0443
-45    0.0537
-46    0.0757
-47    0.1296
-48    0.1397
-49    0.1542
-50    0.1762
-51    0.1815
+  0
+42    0.0151
+43    0.0282
+44    0.0437
+45    0.0561
+46    0.0706
+47    0.1360
+48    0.1417
+49    0.1517
+50    0.1730
+51    0.1839
 dtype: float64
 When the start steps is 2 , the position and frequency are 
-  a
-42    0.0150
-43    0.0290
-44    0.0428
-45    0.0577
-46    0.0723
-47    0.1227
-48    0.1473
-49    0.1547
-50    0.1736
-51    0.1849
-dtype: float64
-When the start steps is 3 , the position and frequency are 
-  a
-42    0.0121
-43    0.0300
-44    0.0421
-45    0.0558
-46    0.0750
-47    0.1291
-48    0.1389
-49    0.1567
-50    0.1727
-51    0.1876
-dtype: float64
-When the start steps is 4 , the position and frequency are 
-  a
-42    0.0142
-43    0.0251
-44    0.0446
-45    0.0585
-46    0.0719
-47    0.1291
-48    0.1430
-49    0.1545
-50    0.1759
-51    0.1832
-dtype: float64
-When the start steps is 5 , the position and frequency are 
-  a
-42    0.0155
-43    0.0288
-44    0.0415
-45    0.0598
-46    0.0705
-47    0.1233
-48    0.1444
-49    0.1585
-50    0.1692
-51    0.1885
-dtype: float64
-When the start steps is 6 , the position and frequency are 
-  a
-42    0.0153
-43    0.0258
-44    0.0435
-45    0.0606
-46    0.0689
-47    0.1298
-48    0.1367
-49    0.1536
-50    0.1739
-51    0.1919
-dtype: float64
-When the start steps is 7 , the position and frequency are 
-  a
+  1
 42    0.0145
-43    0.0277
-44    0.0425
-45    0.0585
-46    0.0713
-47    0.1239
-48    0.1444
-49    0.1560
-50    0.1765
+43    0.0278
+44    0.0450
+45    0.0582
+46    0.0704
+47    0.1373
+48    0.1429
+49    0.1513
+50    0.1679
 51    0.1847
 dtype: float64
-When the start steps is 8 , the position and frequency are 
-  a
-42    0.0152
-43    0.0275
-44    0.0399
-45    0.0551
-46    0.0727
-47    0.1274
-48    0.1430
-49    0.1548
+When the start steps is 3 , the position and frequency are 
+  2
+42    0.0148
+43    0.0296
+44    0.0439
+45    0.0564
+46    0.0688
+47    0.1359
+48    0.1451
+49    0.1497
+50    0.1695
+51    0.1863
+dtype: float64
+When the start steps is 4 , the position and frequency are 
+  3
+42    0.0154
+43    0.0294
+44    0.0436
+45    0.0564
+46    0.0680
+47    0.1367
+48    0.1447
+49    0.1511
 50    0.1736
-51    0.1908
+51    0.1811
+dtype: float64
+When the start steps is 5 , the position and frequency are 
+  4
+42    0.0146
+43    0.0265
+44    0.0442
+45    0.0555
+46    0.0688
+47    0.1373
+48    0.1442
+49    0.1491
+50    0.1747
+51    0.1851
+dtype: float64
+When the start steps is 6 , the position and frequency are 
+  5
+42    0.0135
+43    0.0277
+44    0.0432
+45    0.0573
+46    0.0711
+47    0.1325
+48    0.1445
+49    0.1540
+50    0.1729
+51    0.1833
+dtype: float64
+When the start steps is 7 , the position and frequency are 
+  6
+42    0.0136
+43    0.0284
+44    0.0457
+45    0.0557
+46    0.0711
+47    0.1362
+48    0.1393
+49    0.1535
+50    0.1710
+51    0.1855
+dtype: float64
+When the start steps is 8 , the position and frequency are 
+  7
+42    0.0155
+43    0.0298
+44    0.0443
+45    0.0567
+46    0.0711
+47    0.1350
+48    0.1439
+49    0.1528
+50    0.1713
+51    0.1796
 dtype: float64
 When the start steps is 9 , the position and frequency are 
-  a
-42    0.0164
-43    0.0284
-44    0.0425
-45    0.0581
-46    0.0673
-47    0.1212
-48    0.1468
-49    0.1531
-50    0.1798
-51    0.1864
+  8
+42    0.0152
+43    0.0289
+44    0.0454
+45    0.0561
+46    0.0683
+47    0.1342
+48    0.1427
+49    0.1517
+50    0.1730
+51    0.1845
 dtype: float64
 When the start steps is 10 , the position and frequency are 
-  a
-42    0.0148
-43    0.0294
-44    0.0405
-45    0.0621
-46    0.0685
-47    0.1343
-48    0.1386
-49    0.1576
-50    0.1660
-51    0.1882
-dtype: float64
-</pre>
-</div>
-</div>
-
-</div>
-
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="n">face_steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">2</span><span class="p">)]</span>  
-<span class="k">def</span> <span class="nf">main_func1</span><span class="p">(</span> <span class="n">face_steps</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-
-    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">face_steps</span><span class="p">:</span>
-
-        <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-            <span class="n">num_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">if</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">11</span> <span class="ow">or</span> <span class="n">y</span><span class="o">==</span> <span class="mi">12</span> <span class="ow">or</span> <span class="n">y</span><span class="o">==</span> <span class="mi">13</span> <span class="k">else</span> <span class="n">y</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">14</span><span class="p">)]</span>
-            <span class="n">a</span> <span class="o">=</span> <span class="n">num_list</span><span class="o">*</span><span class="mi">4</span> 
-            <span class="n">data1</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="mi">52</span><span class="p">)</span> <span class="c1"># 52 cards</span>
-            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">card_steps</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="n">x</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">output</span> <span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">])</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;When the face step is&#39;</span><span class="p">,</span> <span class="n">x</span> <span class="p">,</span> <span class="s1">&#39;, the position and frequency are </span><span class="se">\n</span><span class="s1"> &#39;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">/</span><span class="n">n</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># when play 52 cards</span>
-<span class="n">main_func1</span><span class="p">(</span><span class="n">face_steps</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>When the face step is 1 , the position and frequency are 
-  a
-42    0.0175
-43    0.0355
-44    0.0513
-45    0.0713
-46    0.0815
-47    0.1026
-48    0.1166
-49    0.1434
-50    0.1531
-51    0.2272
-dtype: float64
-When the face step is 3 , the position and frequency are 
-  a
-42    0.0144
-43    0.0290
-44    0.0516
-45    0.0618
-46    0.0769
-47    0.0960
-48    0.1063
-49    0.1736
-50    0.1847
-51    0.2057
-dtype: float64
-When the face step is 5 , the position and frequency are 
-  a
+  9
 42    0.0147
-43    0.0260
-44    0.0412
-45    0.0584
-46    0.0750
-47    0.1309
-48    0.1426
-49    0.1588
-50    0.1689
-51    0.1835
-dtype: float64
-When the face step is 7 , the position and frequency are 
-  a
-42    0.0150
-43    0.0234
-44    0.0409
-45    0.0955
-46    0.1109
-47    0.1108
-48    0.1276
-49    0.1401
-50    0.1634
-51    0.1724
-dtype: float64
-When the face step is 9 , the position and frequency are 
-  a
-42    0.0116
-43    0.0620
-44    0.0663
-45    0.0875
-46    0.0996
-47    0.1130
-48    0.1179
-49    0.1345
-50    0.1460
-51    0.1616
+43    0.0267
+44    0.0446
+45    0.0578
+46    0.0689
+47    0.1346
+48    0.1423
+49    0.1524
+50    0.1732
+51    0.1848
 dtype: float64
 </pre>
 </div>
@@ -16041,23 +15815,24 @@ dtype: float64
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># rewrite for function</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="n">face_steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">2</span><span class="p">)]</span>  
-<span class="k">def</span> <span class="nf">main_func2</span><span class="p">(</span> <span class="n">face_steps</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-
-    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">face_steps</span><span class="p">:</span>
-
+<span class="k">def</span> <span class="nf">main_fun</span><span class="p">(</span><span class="n">face_setps</span><span class="o">=</span><span class="mi">5</span> <span class="p">,</span> <span class="n">num_card</span> <span class="o">=</span> <span class="mi">52</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
+    
+    <span class="n">steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">)]</span>  <span class="c1"># specific picks from starts</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
         <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-            <span class="n">num_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">if</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">11</span> <span class="ow">or</span> <span class="n">y</span><span class="o">==</span> <span class="mi">12</span> <span class="ow">or</span> <span class="n">y</span><span class="o">==</span> <span class="mi">13</span> <span class="k">else</span> <span class="n">y</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">14</span><span class="p">)]</span>
-            <span class="n">a</span> <span class="o">=</span> <span class="n">num_list</span><span class="o">*</span><span class="mi">8</span>
-            <span class="n">data2</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="mi">104</span><span class="p">)</span> <span class="c1"># 104 cards </span>
-
-            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">card_steps</span><span class="p">(</span><span class="n">data2</span><span class="p">,</span> <span class="n">x</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">output</span> <span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">])</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;When the face step is&#39;</span><span class="p">,</span> <span class="n">x</span> <span class="p">,</span> <span class="s1">&#39;, the position and frequency are </span><span class="se">\n</span><span class="s1"> &#39;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">/</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">num_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">face_setps</span> <span class="k">if</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">11</span> <span class="ow">or</span> <span class="n">y</span><span class="o">==</span> <span class="mi">12</span> <span class="ow">or</span> <span class="n">y</span><span class="o">==</span> <span class="mi">13</span> <span class="k">else</span> <span class="n">y</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">14</span><span class="p">)]</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">num_card</span><span class="o">/</span><span class="mi">52</span> <span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">num_list</span><span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="n">data1</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">num_card</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">card_steps</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="n">x</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">i</span><span class="p">:</span><span class="n">output</span><span class="p">})</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">result</span><span class="p">,</span><span class="n">df</span><span class="p">],</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
 </pre></div>
 
      </div>
@@ -16071,8 +15846,15 @@ dtype: float64
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># when play 104 cards</span>
-<span class="n">main_func2</span><span class="p">(</span><span class="n">face_steps</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">main_fun</span><span class="p">(</span><span class="n">num_card</span><span class="o">=</span><span class="mi">104</span><span class="p">)</span>
+
+<span class="n">prob_max</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">prob_max</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">())</span><span class="o">/</span><span class="mi">10</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The max prob in same position is &#39;</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">prob_max</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The min prob in same position is &#39;</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">prob_max</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The frequency is </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">prob_max</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">prob_max</span><span class="p">)</span><span class="o">.</span><span class="n">hist</span><span class="p">()</span>
 </pre></div>
 
      </div>
@@ -16092,71 +15874,159 @@ dtype: float64
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>When the face step is 1 , the position and frequency are 
-  a
-94     0.0178
-95     0.0344
-96     0.0489
-97     0.0666
-98     0.0816
-99     0.1059
-100    0.1226
-101    0.1387
-102    0.1548
-103    0.2287
-dtype: float64
-When the face step is 3 , the position and frequency are 
-  a
-94     0.0170
-95     0.0294
-96     0.0499
-97     0.0626
-98     0.0800
-99     0.0934
-100    0.1082
-101    0.1738
-102    0.1888
-103    0.1969
-dtype: float64
-When the face step is 5 , the position and frequency are 
-  a
-94     0.0136
-95     0.0294
-96     0.0433
-97     0.0575
-98     0.0727
-99     0.1275
-100    0.1410
-101    0.1593
-102    0.1723
-103    0.1834
-dtype: float64
-When the face step is 7 , the position and frequency are 
-  a
-94     0.0147
-95     0.0245
-96     0.0437
-97     0.0936
-98     0.1076
-99     0.1231
-100    0.1317
-101    0.1381
-102    0.1573
-103    0.1657
-dtype: float64
-When the face step is 9 , the position and frequency are 
-  a
-94     0.0122
-95     0.0655
-96     0.0678
-97     0.0876
-98     0.0929
-99     0.1059
-100    0.1261
-101    0.1358
-102    0.1456
-103    0.1606
-dtype: float64
+<pre>The max prob in same position is  1.0
+The min prob in same position is  0.5
+The frequency is 
+ 1.0    9364
+0.6     150
+0.7     150
+0.8     137
+0.9     125
+0.5      74
+dtype: int64
+</pre>
+</div>
+</div>
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>&lt;AxesSubplot:&gt;</pre>
+</div>
+
+</div>
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+<div class="jp-RenderedImage jp-OutputArea-output ">
+<img src="data:image/png;base64,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"
+>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="Playing-104-Cards-Results">Playing 104 Cards Results<a class="anchor-link" href="#Playing-104-Cards-Results">&#182;</a></h2><ol>
+<li>Comparing to 52 cards, the 104 cards game will almost twice chance to win the game( final cards stop in the same positions).</li>
+<li>It also improve the worst case probability.</li>
+</ol>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">face_steps</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">9</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">face_steps</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The steps of face card = &#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">main_fun</span><span class="p">(</span><span class="n">face_setps</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">prob_max</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">prob_max</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">())</span><span class="o">/</span><span class="mi">10</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The max prob in same position is &#39;</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">prob_max</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The min prob in same position is &#39;</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">prob_max</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The frequency is </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">prob_max</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>The steps of face card =  1
+The max prob in same position is  1.0
+The min prob in same position is  0.4
+The frequency is 
+ 1.0    8152
+0.9     494
+0.8     402
+0.7     393
+0.6     363
+0.5     195
+0.4       1
+dtype: int64
+The steps of face card =  3
+The max prob in same position is  1.0
+The min prob in same position is  0.4
+The frequency is 
+ 1.0    6990
+0.6     710
+0.8     667
+0.9     635
+0.7     613
+0.5     375
+0.4      10
+dtype: int64
+The steps of face card =  5
+The max prob in same position is  1.0
+The min prob in same position is  0.4
+The frequency is 
+ 1.0    5588
+0.6    1002
+0.7     967
+0.8     958
+0.9     844
+0.5     594
+0.4      47
+dtype: int64
+The steps of face card =  7
+The max prob in same position is  1.0
+The min prob in same position is  0.3
+The frequency is 
+ 1.0    4301
+0.6    1314
+0.7    1254
+0.8    1201
+0.9    1062
+0.5     761
+0.4     106
+0.3       1
+dtype: int64
+The steps of face card =  9
+The max prob in same position is  1.0
+The min prob in same position is  0.3
+The frequency is 
+ 1.0    3210
+0.6    1613
+0.7    1441
+0.8    1339
+0.9    1180
+0.5     991
+0.4     222
+0.3       4
+dtype: int64
 </pre>
 </div>
 </div>
@@ -16168,10 +16038,115 @@ dtype: float64
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Q12b-Results:">Q12b Results:<a class="anchor-link" href="#Q12b-Results:">&#182;</a></h2><ol>
-<li>The highest frequency will happen in 51 and 103. To adjust the face steps or the start postions does not impact the results. </li>
+<h2 id="Change-steps-of-face-card-results-in-52-cards:">Change steps of face card results in 52 cards:<a class="anchor-link" href="#Change-steps-of-face-card-results-in-52-cards:">&#182;</a></h2><p>It's easy to say, the smaller steps of face cards, the higher probability will win.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">face_steps</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">9</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">face_steps</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The steps of face card = &#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">main_fun</span><span class="p">(</span><span class="n">face_setps</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">num_card</span><span class="o">=</span><span class="mi">104</span><span class="p">)</span>
+    <span class="n">prob_max</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">prob_max</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">())</span><span class="o">/</span><span class="mi">10</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The max prob in same position is &#39;</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">prob_max</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The min prob in same position is &#39;</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">prob_max</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The frequency is </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">prob_max</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>The steps of face card =  1
+The max prob in same position is  1.0
+The min prob in same position is  0.5
+The frequency is 
+ 1.0    9917
+0.9      23
+0.8      21
+0.7      18
+0.6      15
+0.5       6
+dtype: int64
+The steps of face card =  3
+The max prob in same position is  1.0
+The min prob in same position is  0.5
+The frequency is 
+ 1.0    9694
+0.9      75
+0.6      72
+0.8      64
+0.7      54
+0.5      41
+dtype: int64
+The steps of face card =  5
+The max prob in same position is  1.0
+The min prob in same position is  0.5
+The frequency is 
+ 1.0    9398
+0.6     144
+0.8     141
+0.7     136
+0.9     125
+0.5      56
+dtype: int64
+The steps of face card =  7
+The max prob in same position is  1.0
+The min prob in same position is  0.5
+The frequency is 
+ 1.0    8822
+0.8     290
+0.7     259
+0.6     253
+0.9     236
+0.5     140
+dtype: int64
+The steps of face card =  9
+The max prob in same position is  1.0
+The min prob in same position is  0.4
+The frequency is 
+ 1.0    8128
+0.7     433
+0.8     415
+0.9     407
+0.6     371
+0.5     242
+0.4       4
+dtype: int64
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="Change-steps-of-face-card-results-in-104-cards:">Change steps of face card results in 104 cards:<a class="anchor-link" href="#Change-steps-of-face-card-results-in-104-cards:">&#182;</a></h2><ol>
+<li>It is more promissing outcome as we compare 52 cards results. Most of time will have 100% probability end in the same cards.</li>
 <li>The smaller face steps, the higher probability is.</li>
-<li>The more cards we play, the less probability we win.</li>
+<li>The more cards we play, the higher probability we win.</li>
 </ol>
 
 </div>
