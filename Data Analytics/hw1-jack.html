@@ -15020,7 +15020,7 @@ $$</p>
 <span class="n">r2</span> <span class="o">=</span> <span class="mi">264</span>
 <span class="n">z1</span> <span class="o">=</span> <span class="p">(</span><span class="n">r1</span><span class="o">/</span><span class="n">n</span><span class="o">-</span> <span class="n">p</span><span class="p">)</span><span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">p</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span><span class="o">/</span><span class="n">n</span><span class="p">))</span>
 <span class="n">z2</span> <span class="o">=</span> <span class="p">(</span><span class="n">r2</span><span class="o">/</span><span class="n">n</span><span class="o">-</span> <span class="n">p</span><span class="p">)</span><span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">p</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span><span class="o">/</span><span class="n">n</span><span class="p">))</span>
-<span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z2</span><span class="p">)</span> <span class="o">-</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z1</span><span class="p">)</span>
+<span class="mi">1</span><span class="o">-</span> <span class="p">(</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z2</span><span class="p">)</span> <span class="o">-</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z1</span><span class="p">))</span>
 </pre></div>
 
      </div>
@@ -15042,7 +15042,7 @@ $$</p>
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>0.9544997361036416</pre>
+<pre>0.04550026389635842</pre>
 </div>
 
 </div>
@@ -15054,7 +15054,10 @@ $$</p>
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="q9">q9<a class="anchor-link" href="#q9">&#182;</a></h3>
+<h3 id="q9">q9<a class="anchor-link" href="#q9">&#182;</a></h3>\begin{aligned}
+H_0 &amp;: Binomial \; Distribution \\
+H_1 &amp;: Not \; H_0
+\end{aligned}
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
@@ -15214,7 +15217,10 @@ Do not reject H_0
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="q10">q10<a class="anchor-link" href="#q10">&#182;</a></h3>
+<h3 id="q10">q10<a class="anchor-link" href="#q10">&#182;</a></h3>\begin{aligned}
+H_0 &amp;: Two \; courses \; are \; independent \\
+H_1 &amp;: Not \; H_0
+\end{aligned}
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
@@ -15318,9 +15324,9 @@ Do not reject H_0
 <span class="n">val</span> <span class="o">=</span> <span class="n">chi2</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">.99</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Q10: The test statistic value=&#39;</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">chi</span> <span class="o">&lt;</span> <span class="n">val</span><span class="p">:</span>
-     <span class="nb">print</span><span class="p">(</span> <span class="s1">&#39;Do not reject H_0&#39;</span><span class="p">)</span>
+     <span class="nb">print</span><span class="p">(</span> <span class="s1">&#39;Do not reject H_0: Independent&#39;</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reject H_0&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reject H_0. The two courses are related&#39;</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -15341,7 +15347,7 @@ Do not reject H_0
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>Q10: The test statistic value= 13.276704135987622
-Reject H_0
+Reject H_0. The two courses are related
 </pre>
 </div>
 </div>
