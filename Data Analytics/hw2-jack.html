@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>hw2-jack-1</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>hw2-jack</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 
 
 
@@ -14536,6 +14536,8 @@ a.anchor-link {
 <span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
 <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
 
      </div>
@@ -14894,8 +14896,8 @@ All other betas:  [ 0.01370658  0.01892014  0.01960122 ... -0.00937706 -0.052153
 Dep. Variable:                      y   R-squared:                       1.000
 Model:                            OLS   Adj. R-squared:                    nan
 Method:                 Least Squares   F-statistic:                       nan
-Date:                Fri, 04 Mar 2022   Prob (F-statistic):                nan
-Time:                        01:03:48   Log-Likelihood:                 12661.
+Date:                Sun, 06 Mar 2022   Prob (F-statistic):                nan
+Time:                        09:43:08   Log-Likelihood:                 12661.
 No. Observations:                 400   AIC:                        -2.452e+04
 Df Residuals:                       0   BIC:                        -2.292e+04
 Df Model:                         399                                         
@@ -17705,7 +17707,7 @@ The significant pixels are ( 53 , 11 )
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>&lt;matplotlib.image.AxesImage at 0x7f1b9c833160&gt;</pre>
+<pre>&lt;matplotlib.image.AxesImage at 0x7fe8f01ddc40&gt;</pre>
 </div>
 
 </div>
@@ -17818,18 +17820,50 @@ The data size (61, 87)
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">keepmoving</span><span class="p">(</span><span class="n">data</span> <span class="p">,</span> <span class="n">moving_rows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">moving_cols</span><span class="o">=</span><span class="mi">7</span> <span class="p">,</span><span class="n">start_row</span><span class="o">=</span><span class="mi">0</span> <span class="p">,</span> <span class="n">start_col</span><span class="o">=</span><span class="mi">86</span><span class="p">):</span>
-    <span class="c1">#moving_cols = 7</span>
-    <span class="c1">#moving_rows = 9</span>
-    <span class="c1">#all_rows = data.shape[0]-1</span>
-    <span class="c1">#all_cols = data.shape[1]-1</span>
-    <span class="c1"># df = data.iloc[:moving_rows,:moving_cols]</span>
-    <span class="c1"># print(df)</span>
-    <span class="n">pos_list</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">moving_cols</span><span class="o">*</span><span class="n">moving_rows</span><span class="p">)]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">keepmoving</span><span class="p">(</span><span class="n">data</span> <span class="p">,</span> <span class="n">moving_rows</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">moving_cols</span><span class="o">=</span><span class="mi">7</span> <span class="p">,</span><span class="n">start_row</span><span class="o">=</span><span class="mi">0</span> 
+<span class="p">,</span> <span class="n">start_col</span><span class="o">=</span><span class="mi">86</span><span class="p">,</span> <span class="n">variation</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+
+    <span class="c1"># make sure variation can&#39;t be greater than moving</span>
+    <span class="k">if</span> <span class="n">variation</span><span class="o">&gt;</span> <span class="n">moving_cols</span> <span class="ow">or</span> <span class="n">variation</span><span class="o">&gt;</span><span class="n">moving_rows</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;variation can</span><span class="se">\&#39;</span><span class="s1">t be greater than moving steps&#39;</span><span class="p">)</span>
+        <span class="k">return</span> 
+
     <span class="n">hight</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start_row</span><span class="p">,</span> <span class="n">moving_rows</span><span class="o">+</span><span class="n">start_row</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start_col</span><span class="p">,</span> <span class="n">start_col</span><span class="o">-</span><span class="n">moving_cols</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="c1"># add random variation, defalt is 0</span>
+    <span class="n">moving_cols</span> <span class="o">=</span> <span class="n">moving_cols</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">variation</span><span class="p">,</span><span class="n">variation</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">moving_rows</span> <span class="o">=</span> <span class="n">moving_rows</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">variation</span><span class="p">,</span><span class="n">variation</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="c1"># def the area </span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&lt;</span> <span class="n">start_row</span> <span class="o">+</span> <span class="n">moving_rows</span><span class="p">:</span>
+        <span class="n">top</span> <span class="o">=</span>  <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">top</span> <span class="o">=</span> <span class="n">moving_rows</span> <span class="o">+</span> <span class="n">start_row</span>
+    <span class="k">if</span> <span class="n">start_row</span> <span class="o">-</span> <span class="n">moving_rows</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">down</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">down</span> <span class="o">=</span> <span class="n">start_row</span> <span class="o">-</span> <span class="n">moving_rows</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">start_col</span> <span class="o">+</span> <span class="n">moving_cols</span><span class="p">:</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span><span class="mi">1</span> <span class="c1"># prevent to be 87</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="n">start_col</span> <span class="o">+</span> <span class="n">moving_cols</span><span class="o">-</span><span class="mi">1</span>
+    <span class="k">if</span> <span class="n">start_col</span> <span class="o">-</span> <span class="n">moving_cols</span> <span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># the most right is 0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="n">start_col</span> <span class="o">-</span> <span class="n">moving_cols</span>
+
+    <span class="c1"># I found variation impact moving steps. sometimes will in same pos</span>
+    <span class="c1"># add this to prevent errors.</span>
+    <span class="k">if</span> <span class="n">top</span> <span class="o">==</span> <span class="n">down</span><span class="p">:</span>
+        <span class="n">top</span><span class="o">+=</span><span class="mi">1</span>
+    <span class="k">if</span> <span class="n">left</span> <span class="o">==</span><span class="n">right</span><span class="p">:</span>
+        <span class="n">left</span><span class="o">+=</span><span class="mi">1</span>
+    <span class="c1">#print(start_col)</span>
+    <span class="c1">#print(top,down,right,left)</span>
+    <span class="n">pos_list</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">((</span><span class="n">top</span><span class="o">-</span><span class="n">down</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">left</span><span class="o">-</span><span class="n">right</span><span class="p">))]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">down</span><span class="p">,</span> <span class="n">top</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="c1">#print(&#39;k=&#39;,k)</span>
             <span class="n">pos_list</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="n">i</span>
             <span class="n">pos_list</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="n">j</span>
             <span class="n">hight</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">])</span>
@@ -17850,25 +17884,32 @@ The data size (61, 87)
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">epoch</span> <span class="o">=</span> <span class="mi">20</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">epoch</span> <span class="o">=</span> <span class="mi">50</span>
 <span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">86</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Start at (&#39;</span> <span class="p">,</span><span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;,&#39;</span> <span class="p">,</span> <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="s1">&#39;)&#39;</span> <span class="p">,</span> 
     <span class="s1">&#39;hight=&#39;</span><span class="p">,</span><span class="n">volcano_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
 <span class="n">best_pos_list</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">best_hight</span><span class="o">=</span> <span class="p">[]</span>
-
+<span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="c1"># while flag:   # not the best way </span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Let</span><span class="se">\&#39;</span><span class="s1">s start </span><span class="si">{}</span><span class="s1"> time moving:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-    <span class="n">pos_list</span><span class="p">,</span><span class="n">hight</span> <span class="o">=</span> <span class="n">keepmoving</span><span class="p">(</span><span class="n">volcano_df</span><span class="p">,</span><span class="n">start_row</span><span class="o">=</span><span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">start_col</span><span class="o">=</span><span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Let</span><span class="se">\&#39;</span><span class="s1">s start </span><span class="si">{}</span><span class="s1"> time moving:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+    <span class="n">pos_list</span><span class="p">,</span><span class="n">hight</span> <span class="o">=</span> <span class="n">keepmoving</span><span class="p">(</span><span class="n">volcano_df</span><span class="p">,</span><span class="n">start_row</span><span class="o">=</span><span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">start_col</span><span class="o">=</span><span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">variation</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
     <span class="c1"># regression </span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">pos_list</span><span class="p">,</span><span class="n">hight</span><span class="p">)</span>
     <span class="n">r_sq</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">pos_list</span><span class="p">,</span> <span class="n">hight</span><span class="p">)</span>
     <span class="c1"># predict the best index</span>
     <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">pos_list</span><span class="p">))</span>
+
+    <span class="c1">#if k &gt; 2 and best_hight[k-1] == hight[index]:</span>
+    <span class="c1">#    flag = False</span>
+    
     <span class="n">best_hight</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hight</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
     <span class="n">best_pos_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pos_list</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Best at &#39;</span> <span class="p">,</span><span class="n">pos_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="p">,</span> <span class="s1">&#39;hight=&#39;</span><span class="p">,</span><span class="n">hight</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
     <span class="n">start</span> <span class="o">=</span> <span class="n">pos_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+    <span class="n">k</span><span class="o">+=</span><span class="mi">1</span>
 <span class="n">best_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">best_hight</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The highest position is&#39;</span><span class="p">,</span> <span class="n">best_hight</span><span class="p">[</span><span class="n">best_index</span><span class="p">],</span>
         <span class="s1">&#39;when position is &#39;</span> <span class="p">,</span> <span class="n">best_pos_list</span><span class="p">[</span><span class="n">best_index</span><span class="p">])</span>
@@ -17893,46 +17934,106 @@ The data size (61, 87)
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>Start at ( 0 , 86 ) hight= 97
 Let&#39;s start 1 time moving:
-Best at  [2, 80] hight= 100
+Best at  [4, 80] hight= 101
 Let&#39;s start 2 time moving:
-Best at  [4, 74] hight= 106
+Best at  [6, 76] hight= 105
 Let&#39;s start 3 time moving:
-Best at  [6, 68] hight= 123
+Best at  [9, 68] hight= 126
 Let&#39;s start 4 time moving:
-Best at  [8, 68] hight= 125
+Best at  [13, 61] hight= 143
 Let&#39;s start 5 time moving:
-Best at  [10, 62] hight= 132
+Best at  [17, 53] hight= 148
 Let&#39;s start 6 time moving:
-Best at  [12, 62] hight= 139
+Best at  [23, 46] hight= 169
 Let&#39;s start 7 time moving:
-Best at  [14, 62] hight= 145
+Best at  [26, 39] hight= 179
 Let&#39;s start 8 time moving:
-Best at  [16, 62] hight= 150
+Best at  [32, 33] hight= 161
 Let&#39;s start 9 time moving:
-Best at  [18, 62] hight= 150
+Best at  [28, 39] hight= 178
 Let&#39;s start 10 time moving:
-Best at  [20, 56] hight= 151
+Best at  [21, 32] hight= 170
 Let&#39;s start 11 time moving:
-Best at  [22, 50] hight= 164
+Best at  [25, 27] hight= 179
 Let&#39;s start 12 time moving:
-Best at  [24, 50] hight= 168
+Best at  [18, 21] hight= 172
 Let&#39;s start 13 time moving:
-Best at  [26, 50] hight= 166
+Best at  [22, 25] hight= 181
 Let&#39;s start 14 time moving:
-Best at  [26, 44] hight= 168
+Best at  [26, 18] hight= 190
 Let&#39;s start 15 time moving:
-Best at  [26, 38] hight= 180
+Best at  [31, 23] hight= 169
 Let&#39;s start 16 time moving:
-Best at  [26, 38] hight= 180
+Best at  [25, 17] hight= 186
 Let&#39;s start 17 time moving:
-Best at  [26, 38] hight= 180
+Best at  [28, 22] hight= 183
 Let&#39;s start 18 time moving:
-Best at  [26, 38] hight= 180
+Best at  [23, 14] hight= 171
 Let&#39;s start 19 time moving:
-Best at  [26, 38] hight= 180
+Best at  [28, 19] hight= 193
 Let&#39;s start 20 time moving:
-Best at  [26, 38] hight= 180
-The highest position is 180 when position is  [26, 38]
+Best at  [23, 13] hight= 165
+Let&#39;s start 21 time moving:
+Best at  [29, 18] hight= 193
+Let&#39;s start 22 time moving:
+Best at  [24, 24] hight= 185
+Let&#39;s start 23 time moving:
+Best at  [30, 19] hight= 195
+Let&#39;s start 24 time moving:
+Best at  [25, 14] hight= 173
+Let&#39;s start 25 time moving:
+Best at  [30, 22] hight= 176
+Let&#39;s start 26 time moving:
+Best at  [25, 16] hight= 183
+Let&#39;s start 27 time moving:
+Best at  [29, 20] hight= 191
+Let&#39;s start 28 time moving:
+Best at  [25, 13] hight= 167
+Let&#39;s start 29 time moving:
+Best at  [30, 17] hight= 189
+Let&#39;s start 30 time moving:
+Best at  [36, 21] hight= 183
+Let&#39;s start 31 time moving:
+Best at  [42, 14] hight= 160
+Let&#39;s start 32 time moving:
+Best at  [38, 19] hight= 190
+Let&#39;s start 33 time moving:
+Best at  [32, 12] hight= 172
+Let&#39;s start 34 time moving:
+Best at  [35, 18] hight= 191
+Let&#39;s start 35 time moving:
+Best at  [28, 24] hight= 174
+Let&#39;s start 36 time moving:
+Best at  [23, 16] hight= 180
+Let&#39;s start 37 time moving:
+Best at  [29, 21] hight= 184
+Let&#39;s start 38 time moving:
+Best at  [23, 14] hight= 171
+Let&#39;s start 39 time moving:
+Best at  [27, 22] hight= 185
+Let&#39;s start 40 time moving:
+Best at  [20, 17] hight= 172
+Let&#39;s start 41 time moving:
+Best at  [24, 25] hight= 183
+Let&#39;s start 42 time moving:
+Best at  [18, 21] hight= 172
+Let&#39;s start 43 time moving:
+Best at  [21, 27] hight= 180
+Let&#39;s start 44 time moving:
+Best at  [27, 21] hight= 189
+Let&#39;s start 45 time moving:
+Best at  [24, 17] hight= 184
+Let&#39;s start 46 time moving:
+Best at  [30, 22] hight= 176
+Let&#39;s start 47 time moving:
+Best at  [25, 15] hight= 180
+Let&#39;s start 48 time moving:
+Best at  [29, 20] hight= 191
+Let&#39;s start 49 time moving:
+Best at  [26, 12] hight= 164
+Let&#39;s start 50 time moving:
+Best at  [31, 17] hight= 189
+The highest position is 195 when position is  [30, 19]
 </pre>
 </div>
 </div>
@@ -17947,8 +18048,7 @@ The highest position is 180 when position is  [26, 38]
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Start at &#39;</span> <span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">86</span><span class="p">]</span> <span class="p">,</span> <span class="s1">&#39;hight=&#39;</span><span class="p">,</span><span class="n">volcano_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">86</span><span class="p">])</span>
-<span class="n">pos_list</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The real highest value in data is &#39;</span> <span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">volcano_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:]</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
 </pre></div>
 
      </div>
@@ -17968,23 +18068,499 @@ The highest position is 180 when position is  [26, 38]
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Start at  [0, 86] hight= 97
+<pre>The real highest value in data is  195
 </pre>
 </div>
 </div>
 
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="q2-results">q2 results<a class="anchor-link" href="#q2-results">&#182;</a></h2><p>My methodoloty is set a range of area and the predict the response values.
+The function can with or without variation because I would like like to add stochastics behaviors in order to better predict results.</p>
+<ul>
+<li>When I differ the variation and moving steps, the best I found is that the highest position is around 195.</li>
+<li>Sometimes the results is the identical with original data hghest point. </li>
+</ul>
+
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h1 id="q3">q3<a class="anchor-link" href="#q3">&#182;</a></h1>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">size</span> <span class="o">=</span> <span class="mi">50000</span>
+<span class="n">b0</span> <span class="o">=</span> <span class="mi">13</span>
+<span class="n">b1</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">b2</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="o">*</span><span class="mi">3</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="n">size</span><span class="o">*</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">size</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">x1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="n">size</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">size</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="n">size</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">size</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">eps</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">b0</span> <span class="o">+</span> <span class="n">b1</span><span class="o">*</span><span class="n">x1</span> <span class="o">+</span> <span class="n">b2</span><span class="o">*</span><span class="n">x2</span> <span class="o">+</span> <span class="n">eps</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;x1&#39;</span><span class="p">:</span><span class="n">x1</span> <span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">:</span><span class="n">x2</span><span class="p">})</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+
+<span class="n">r_sq</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;I tested the epsilon is standard normal R.V.&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;R-square: &#39;</span><span class="p">,</span> <span class="n">r_sq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;beta_0 :&#39;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">intercept_</span><span class="p">,</span> <span class="s1">&#39;,whereas true beta_0 is&#39;</span><span class="p">,</span> <span class="n">b0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;(b2,b2) is: &#39;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span><span class="p">,</span> <span class="s1">&#39; ,the true (b1,b2) is&#39;</span> <span class="p">,(</span><span class="n">b1</span><span class="p">,</span><span class="n">b2</span><span class="p">))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 
 
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>86</pre>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>I tested the epsilon is standard normal R.V.
+R-square:  0.9999999999174413
+beta_0 : 12.99863440275658 ,whereas true beta_0 is 13
+(b2,b2) is:  [2.99999987 7.00000002]  ,the true (b1,b2) is (3, 7)
+</pre>
+</div>
 </div>
 
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sigma</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">eps</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">b0</span> <span class="o">+</span> <span class="n">b1</span><span class="o">*</span><span class="n">x1</span> <span class="o">+</span> <span class="n">b2</span><span class="o">*</span><span class="n">x2</span> <span class="o">+</span> <span class="n">eps</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;x1&#39;</span><span class="p">:</span><span class="n">x1</span> <span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">:</span><span class="n">x2</span><span class="p">})</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+
+<span class="n">r_sq</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;I tested the epsilon is normal with sigma is&#39;</span><span class="p">,</span><span class="n">sigma</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;R-square: &#39;</span><span class="p">,</span> <span class="n">r_sq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;beta_0 :&#39;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">intercept_</span><span class="p">,</span> <span class="s1">&#39;,whereas true beta_0 is&#39;</span><span class="p">,</span> <span class="n">b0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;(b2,b2) is: &#39;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span><span class="p">,</span> <span class="s1">&#39; ,the true (b1,b2) is&#39;</span> <span class="p">,(</span><span class="n">b1</span><span class="p">,</span><span class="n">b2</span><span class="p">))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>I tested the epsilon is normal with sigma is 100
+R-square:  0.9999991796792111
+beta_0 : 13.31814608030254 ,whereas true beta_0 is 13
+(b2,b2) is:  [3.00001442 6.99998038]  ,the true (b1,b2) is (3, 7)
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">eps</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">b0</span> <span class="o">+</span> <span class="n">b1</span><span class="o">*</span><span class="n">x1</span> <span class="o">+</span> <span class="n">b2</span><span class="o">*</span><span class="n">x2</span> <span class="o">+</span> <span class="n">eps</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;x1&#39;</span><span class="p">:</span><span class="n">x1</span> <span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">:</span><span class="n">x2</span><span class="p">})</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+
+<span class="n">r_sq</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;I tested the epsilon is uniform R.V.&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;R-square: &#39;</span><span class="p">,</span> <span class="n">r_sq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;beta_0 :&#39;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">intercept_</span><span class="p">,</span> <span class="s1">&#39;,whereas true beta_0 is&#39;</span><span class="p">,</span> <span class="n">b0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;(b2,b2) is: &#39;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span><span class="p">,</span> <span class="s1">&#39; ,the true (b1,b2) is&#39;</span> <span class="p">,(</span><span class="n">b1</span><span class="p">,</span><span class="n">b2</span><span class="p">))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>I tested the epsilon is uniform R.V.
+R-square:  0.999999999993122
+beta_0 : 13.501113239472033 ,whereas true beta_0 is 13
+(b2,b2) is:  [2.99999985 7.00000009]  ,the true (b1,b2) is (3, 7)
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="q3a-results">q3a results<a class="anchor-link" href="#q3a-results">&#182;</a></h2><ul>
+<li>After simulate 5000 runs, I found the results is closed to true $\beta s$ in standard normal R.V.</li>
+<li>With higher $\sigma$, the intercept, $\beta_0$, is distored.</li>
+<li>The same behavior happened when $\epsilon$ is uniform R.V.</li>
+</ul>
+
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="q3b">q3b<a class="anchor-link" href="#q3b">&#182;</a></h2><ul>
+<li>note: 
+$$ sum \; of \; square=(y-\hat{y})^2 $$</li>
+<li>We need to differentiate for $\beta_0, \beta_1, \beta_2$ in this case in order to find the minimum value.</li>
+<li>Take $\beta_0$ as example:
+$$\frac{\partial}{\partial \beta_0} (sum \; of \; square)= -2(y - \hat{h})$$</li>
+<li>The same fasion in $\beta_1$ and $\beta_2$ 
+$$\frac{\partial}{\partial \beta_1} (sum \; of \; square)= -2x_1(y - \hat{h})$$
+$$\frac{\partial}{\partial \beta_2} (sum \; of \; square)= -2x_2(y - \hat{h})$$</li>
+<li>the next point for $\beta_0, \beta_1, \beta_2$ is 
+$$new \; point = old \; point - learning \; rate \times partial \; derivative$$ </li>
+</ul>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># define functions</span>
+
+<span class="k">def</span> <span class="nf">fnc</span><span class="p">(</span><span class="n">b0</span><span class="p">,</span><span class="n">b1</span><span class="p">,</span><span class="n">b2</span><span class="p">,</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">,</span> <span class="n">eps</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">b0</span> <span class="o">+</span> <span class="n">x1</span><span class="o">*</span><span class="n">b1</span> <span class="o">+</span> <span class="n">x2</span><span class="o">*</span><span class="n">b2</span> <span class="o">+</span><span class="n">eps</span>
+    <span class="k">return</span> <span class="n">y</span>
+
+<span class="k">def</span> <span class="nf">partial_b0</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="nb">sum</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">partial_b1</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">x1</span><span class="p">):</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="nb">sum</span><span class="p">(</span><span class="n">error</span> <span class="o">*</span> <span class="n">x1</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">partial_b2</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">x2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="nb">sum</span><span class="p">(</span><span class="n">error</span> <span class="o">*</span><span class="n">x2</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">sum_error_sqrt</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="n">error</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">val</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># start arbitrary beta </span>
+<span class="c1"># new_b0 = 11</span>
+<span class="c1"># new_b1 = 3</span>
+<span class="c1"># new_b2 = 7</span>
+<span class="c1"># initialize paremeters</span>
+<span class="n">size</span> <span class="o">=</span> <span class="mi">50000</span>
+<span class="n">b0</span> <span class="o">=</span> <span class="mi">13</span>
+<span class="n">b1</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">b2</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="c1"># x1 = np.array(random.sample(range(size), k=size)).reshape(1,size)[0]</span>
+<span class="c1"># x2 = np.array(random.sample(range(size), k=size)).reshape(1,size)[0]</span>
+
+<span class="n">x1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)])</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)])</span>
+<span class="n">eps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">fnc</span><span class="p">(</span><span class="n">b0</span><span class="p">,</span><span class="n">b1</span><span class="p">,</span><span class="n">b2</span><span class="p">,</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">,</span><span class="n">eps</span><span class="p">)</span> <span class="c1"># true y value</span>
+<span class="n">epoch</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">rate</span> <span class="o">=</span> <span class="mf">.1</span>
+<span class="n">tolerance</span> <span class="o">=</span> <span class="mf">1e-3</span>
+<span class="n">error</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">errors_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epoch</span><span class="p">):</span>
+    <span class="c1"># error = y - fnc(b0=new_b0,b1=new_b1,b2=new_b2,x1=x1,x2=x2,eps=0)</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">fnc</span><span class="p">(</span><span class="n">b0</span><span class="p">,</span><span class="n">b1</span><span class="p">,</span><span class="n">b2</span><span class="p">,</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">,</span><span class="n">eps</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">rate</span><span class="o">*</span><span class="n">partial_b0</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">/</span><span class="n">size</span> <span class="p">,</span> 
+                     <span class="n">rate</span><span class="o">*</span><span class="n">partial_b1</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">x1</span><span class="p">)</span><span class="o">/</span><span class="n">size</span><span class="p">,</span><span class="n">rate</span><span class="o">*</span><span class="n">partial_b2</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span><span class="o">/</span><span class="n">size</span><span class="p">])</span>
+    <span class="c1"># if np.all(np.abs(diff) &lt;= tolerance):</span>
+    <span class="c1">#         break</span>
+    <span class="n">errors_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sum_error_sqrt</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The sum of square residual &#39;</span><span class="p">,</span> <span class="n">sum_error_sqrt</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+    
+    <span class="n">b0</span> <span class="o">-=</span> <span class="n">diff</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">b1</span> <span class="o">-=</span> <span class="n">diff</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">b2</span> <span class="o">-=</span> <span class="n">diff</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="c1">#print(b0,b1,b2)</span>
+    <span class="c1"># new_b0 = new_b0 - rate*partial_b0(error)</span>
+    <span class="c1"># new_b1 = new_b0 - rate*partial_b1(error, x1)</span>
+    <span class="c1"># new_b2 = new_b2 - rate*partial_b2(error, x2)</span>
+<span class="c1"># print(&#39;The final result for (b0, b1, b2) &#39;, (new_b0, new_b1, new_b2))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;My learning rate is&#39;</span><span class="p">,</span> <span class="n">rate</span><span class="p">,</span> <span class="s1">&#39;break tolerance is &#39;</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The final result for (b0, b1, b2) &#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">((</span><span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">),</span><span class="mi">5</span><span class="p">))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>The sum of square residual  49245.995038267225
+The sum of square residual  49245.524007780004
+The sum of square residual  49245.275762679135
+The sum of square residual  49245.135324196766
+The sum of square residual  49245.047321654725
+The sum of square residual  49244.98508284404
+The sum of square residual  49244.9357527138
+The sum of square residual  49244.89312880691
+The sum of square residual  49244.854211909405
+The sum of square residual  49244.81754536197
+The sum of square residual  49244.78241550724
+The sum of square residual  49244.74846675336
+The sum of square residual  49244.71551622787
+The sum of square residual  49244.683464540416
+The sum of square residual  49244.65225280379
+The sum of square residual  49244.62184193668
+The sum of square residual  49244.59220269157
+The sum of square residual  49244.56331084237
+The sum of square residual  49244.535144859416
+The sum of square residual  49244.50768478523
+The sum of square residual  49244.480911678846
+The sum of square residual  49244.45480734885
+The sum of square residual  49244.429354212196
+The sum of square residual  49244.40453521874
+The sum of square residual  49244.38033381235
+The sum of square residual  49244.356733901244
+The sum of square residual  49244.33371983859
+The sum of square residual  49244.31127640771
+The sum of square residual  49244.28938880619
+The sum of square residual  49244.26804263841
+The sum of square residual  49244.24722389563
+The sum of square residual  49244.22691895427
+The sum of square residual  49244.20711455587
+The sum of square residual  49244.187797801955
+The sum of square residual  49244.16895614411
+The sum of square residual  49244.15057737048
+The sum of square residual  49244.13264959987
+The sum of square residual  49244.115161270085
+The sum of square residual  49244.09810113095
+The sum of square residual  49244.08145823319
+The sum of square residual  49244.065221920486
+The sum of square residual  49244.0493818219
+The sum of square residual  49244.03392784671
+The sum of square residual  49244.01885017029
+The sum of square residual  49244.00413923196
+The sum of square residual  49243.9897857231
+The sum of square residual  49243.97578058577
+The sum of square residual  49243.96211500199
+The sum of square residual  49243.94878038671
+The sum of square residual  49243.93576838143
+The sum of square residual  49243.92307085049
+The sum of square residual  49243.910679874265
+The sum of square residual  49243.89858773858
+The sum of square residual  49243.88678693552
+The sum of square residual  49243.8752701538
+The sum of square residual  49243.86403027389
+The sum of square residual  49243.85306036266
+The sum of square residual  49243.84235366988
+The sum of square residual  49243.831903623526
+The sum of square residual  49243.82170381941
+The sum of square residual  49243.81174802346
+The sum of square residual  49243.802030163635
+The sum of square residual  49243.792544324955
+The sum of square residual  49243.783284747195
+The sum of square residual  49243.774245820525
+The sum of square residual  49243.76542207942
+The sum of square residual  49243.75680819997
+The sum of square residual  49243.74839899558
+The sum of square residual  49243.74018941506
+The sum of square residual  49243.73217453732
+The sum of square residual  49243.72434956654
+The sum of square residual  49243.71670983371
+The sum of square residual  49243.7092507846
+The sum of square residual  49243.70196798689
+The sum of square residual  49243.694857118484
+The sum of square residual  49243.68791397023
+The sum of square residual  49243.68113443972
+The sum of square residual  49243.67451452958
+The sum of square residual  49243.66805034403
+The sum of square residual  49243.661738085415
+The sum of square residual  49243.655574055556
+The sum of square residual  49243.64955464851
+The sum of square residual  49243.64367634939
+The sum of square residual  49243.63793573313
+The sum of square residual  49243.632329461885
+The sum of square residual  49243.62685428079
+The sum of square residual  49243.621507017844
+The sum of square residual  49243.61628458295
+The sum of square residual  49243.61118395923
+The sum of square residual  49243.606202211544
+The sum of square residual  49243.601336473315
+The sum of square residual  49243.5965839544
+The sum of square residual  49243.59194192971
+The sum of square residual  49243.58740774701
+The sum of square residual  49243.58297881713
+The sum of square residual  49243.578652617325
+The sum of square residual  49243.57442668905
+The sum of square residual  49243.57029862955
+The sum of square residual  49243.56626610381
+The sum of square residual  49243.56232682787
+My learning rate is 0.1 break tolerance is  0.001
+The final result for (b0, b1, b2)  [13.00617  4.99625  6.98432]
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="q3b-results-and-comments">q3b results and comments<a class="anchor-link" href="#q3b-results-and-comments">&#182;</a></h2><p>The residuals will go down by gradient step. However, I found sometimes learning rate too large. The residuals results will to up. It will be hard to check what learning rate is suiteble for my model.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># test only. modified from</span>
+<span class="c1"># https://medium.com/analytics-vidhya/gradient-descent-in-3-cells-f308a7c0f0bf</span>
+<span class="k">def</span> <span class="nf">gradient_step</span><span class="p">(</span><span class="n">current_b0</span><span class="p">,</span> <span class="n">current_b1</span> <span class="p">,</span><span class="n">current_b2</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">learningRate</span><span class="p">):</span>
+    <span class="n">totalPoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+    <span class="n">stepped_b0</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">stepped_b1</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">stepped_b2</span> <span class="o">=</span> <span class="mi">0</span>
+   
+    <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="p">((</span><span class="n">current_b1</span> <span class="o">*</span> <span class="n">x1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">current_b2</span> <span class="o">*</span> <span class="n">x2</span><span class="p">)</span> <span class="o">+</span> <span class="n">current_b0</span><span class="p">)</span>
+        <span class="n">stepped_b0</span> <span class="o">+=</span> <span class="o">-</span><span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="n">totalPoints</span><span class="p">)</span> <span class="o">*</span> <span class="n">error</span>
+        <span class="n">stepped_b1</span> <span class="o">+=</span> <span class="o">-</span><span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="n">totalPoints</span><span class="p">)</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">*</span> <span class="n">error</span>          
+        <span class="n">stepped_b2</span> <span class="o">+=</span> <span class="o">-</span><span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="n">totalPoints</span><span class="p">)</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">*</span> <span class="n">error</span>          
+   
+    <span class="n">new_b0</span> <span class="o">=</span> <span class="n">current_b0</span> <span class="o">-</span> <span class="p">(</span><span class="n">learningRate</span> <span class="o">*</span> <span class="n">stepped_b0</span><span class="p">)</span>
+    <span class="n">new_b1</span> <span class="o">=</span> <span class="n">current_b1</span> <span class="o">-</span> <span class="p">(</span><span class="n">learningRate</span> <span class="o">*</span> <span class="n">stepped_b1</span><span class="p">)</span>
+    <span class="n">new_b2</span> <span class="o">=</span> <span class="n">current_b2</span> <span class="o">-</span> <span class="p">(</span><span class="n">learningRate</span> <span class="o">*</span> <span class="n">stepped_b2</span><span class="p">)</span>
+       
+    <span class="k">return</span> <span class="n">new_b0</span><span class="p">,</span> <span class="n">new_b1</span><span class="p">,</span> <span class="n">new_b2</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">list1</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">b0</span> <span class="o">=</span> <span class="mi">13</span>
+<span class="n">b1</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">b2</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)):</span>
+    <span class="n">list1</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epoch</span><span class="p">):</span>
+    <span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="o">=</span>    <span class="n">gradient_step</span><span class="p">(</span><span class="n">b0</span><span class="p">,</span><span class="n">b1</span><span class="p">,</span><span class="n">b2</span><span class="p">,</span><span class="n">list1</span><span class="p">,</span><span class="n">rate</span><span class="p">)</span>
+    
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">([</span><span class="n">b0</span><span class="p">,</span><span class="n">b1</span><span class="p">,</span><span class="n">b2</span><span class="p">],</span><span class="mi">5</span><span class="p">))</span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>[13.23636  4.59553  6.95184]
+</pre>
+</div>
 </div>
 
 </div>
