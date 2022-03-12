@@ -14531,7 +14531,7 @@ a.anchor-link {
 cov(\hat{\beta_0}, \hat{\beta_1}) &amp;= cov(\bar{y} - \hat{\beta_1} \bar{x} , \hat{\beta_1}) \\ &amp;= 
 cov(\bar{y}  , \hat{\beta_1}) -cov(\hat{\beta_1} \bar{x} , \hat{\beta_1}) \\ &amp;=
 0 - \bar{x} cov(\hat{\beta_1}  , \hat{\beta_1}) \\ &amp;= 
-\bar{x} Var(\hat{\beta_1} )  \\ &amp;= 
+-\bar{x} Var(\hat{\beta_1} )  \\ &amp;= 
 - \frac{\bar{x} \sigma^2}{S_{xx}}
 \end{aligned}$$<p>note:
 $$ cov(x,y) = E[(x-E[x])(y-E[y])]=E[xy]-E[x]E[y] \\$$</p>
@@ -14542,10 +14542,75 @@ E[\bar{y}\hat{\beta_1}]-E[\bar{y}] E[\hat{\beta_1}] =0$</p>
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+$$
+\hat{\beta_1}=\frac{
+\sum^n_{i=1}(y_i-\bar{y})(x_i-\bar{x})}
+{\sum^n_{i=1}(x_i-\bar{x})^2}
+$$$$
+\begin{aligned}
+\hat{\beta_1}&amp;=
+\frac{
+\sum^n_{i=1}(y_i-\bar{y})(x_i-\bar{x})}
+{\sum^n_{i=1}(x_i-\bar{x})^2}
+\\
+&amp;=\frac{
+\sum^n_{i=1}y_i(x_i-\bar{x})-\sum^n_{i=1}\bar{y}(x_i-\bar{x})}
+{\sum^n_{i=1}x_i(x_i-\bar{x})-
+\sum^n_{i=1}\bar{x}(x_i-\bar{x})} 
+
+\end{aligned}
+
+$$<p>$\because \displaystyle\sum_{i=1}^n(x_i-\bar{x})
+=\displaystyle\sum_{i=1}^nx_i-n\bar{x}=0$</p>
+$$
+\therefore \hat{\beta_1}=\frac{
+\sum^n_{i=1}y_i(x_i-\bar{x})}
+{\sum^n_{i=1}x_i(x_i-\bar{x})}
+=\frac{
+\sum^n_{i=1}y_i(x_i-\bar{x})}
+{S_{xx}}
+$$<p><br /></p>
+$$
+\bar{y} = \sum\frac{y_i}{n}
+$$
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h2 id="q1b">q1b<a class="anchor-link" href="#q1b">&#182;</a></h2>\begin{align*}
-    cov(\bar{y}  , \hat{\beta_1}) &amp;= E[\bar{y}\hat{\beta_1}]-E[\bar{y}] E[\hat{\beta_1}] \\
-    &amp;= \beta_1 E[\bar{y}] = \beta_1 E[\bar{y}]\\
+    cov(\bar{y}  , \hat{\beta_1}) &amp;= cov(\sum\frac{y_i}{n}, \frac{
+\sum y_i(x_i-\bar{x})}
+{S_{xx}})\\
+    &amp;=\frac{1}{nS_{xx}}cov(y_1+y_2+\dots +y_n\; , \; y_1(x_1-\bar{x})+\dots +y_n(x_n-\bar{x})) \\
+    &amp;= \frac{1}{nS_{xx}}
+    \begin{pmatrix}
+        cov(y_1\; , \; y_1(x_1-\bar{x}) +\\
+        cov(y_1\; , \; y_2(x_2-\bar{x}) +\\
+        \dots +\\
+        cov(y_1\; , \; y_n(x_n-\bar{x}) \\
+    \end{pmatrix} +
+    \begin{pmatrix}
+        cov(y_2\; , \; y_1(x_1-\bar{x}) +\\
+        cov(y_2\; , \; y_2(x_2-\bar{x}) +\\
+        \dots +\\
+        cov(y_2\; , \; y_n(x_n-\bar{x}) \\
+    \end{pmatrix} + \cdots +
+    \begin{pmatrix}
+        cov(y_n\; , \; y_1(x_1-\bar{x}) +\\
+        cov(y_n\; , \; y_2(x_2-\bar{x}) +\\
+        \dots +\\
+        cov(y_n\; , \; y_n(x_n-\bar{x}) \\
+    \end{pmatrix} \\
+    \because \\
+    cov(y_i,y_j)&amp;=0 \\
+    \therefore \\
+    &amp;= \frac{1 }{nS_{xx}} \{cov(y_1\; , \; y_1(x_1-\bar{x})) +cov(y_2\; , \; y_2(x_2-\bar{x})) + \cdots +cov(y_n\; , \; y_n(x_n-\bar{x}))\} \\
+    &amp;= \frac{\sum (x_i-\bar{x}) }{nS_{xx}} \{cov(y_1\; , \; y_1) +cov(y_2\; , \; y_2) + \cdots +cov(y_n\; , \; y_n)\} \\
+    &amp;= \frac{\sum (x_i-\bar{x}) }{nS_{xx}} cov(y_i,y_i) \\
+    &amp;= \frac{0 }{nS_{xx}} \sigma_y^2 \\
     &amp;= 0
+
+
 \end{align*}
 </div>
 </div>
