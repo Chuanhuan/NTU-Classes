@@ -14542,8 +14542,11 @@ E[\bar{y}\hat{\beta_1}]-E[\bar{y}] E[\hat{\beta_1}] =0$</p>
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="q1b">q1b<a class="anchor-link" href="#q1b">&#182;</a></h2>$$cov(\bar{y}  , \hat{\beta_1}) = 
-E[\bar{y}\hat{\beta_1}]-E[\bar{y}] E[\hat{\beta_1}] =0$$
+<h2 id="q1b">q1b<a class="anchor-link" href="#q1b">&#182;</a></h2>\begin{align*}
+    cov(\bar{y}  , \hat{\beta_1}) &amp;= E[\bar{y}\hat{\beta_1}]-E[\bar{y}] E[\hat{\beta_1}] \\
+    &amp;= \beta_1 E[\bar{y}] = \beta_1 E[\bar{y}]\\
+    &amp;= 0
+\end{align*}
 </div>
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
@@ -14597,13 +14600,28 @@ HH &amp;= X(X^TX)^{-1}X^T X(X^TX)^{-1}X^T \\
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>From q3 we can get the $H$ is idempotent.</p>
+
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h1 id="q4">q4<a class="anchor-link" href="#q4">&#182;</a></h1>
 </div>
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>Because $R^2 = \frac{SS_R}{SS_T} \\ $
-The $SS_T = SS_R-SS_{Res}$, the $R^2$ must be $[0,1]$</p>
+we need two condictions.</p>
+<ul>
+<li>$SS_R &lt; SS_T$</li>
+<li>Both $SS_R$ and $SS_T$ must be positive or negative <br />
+<br />
+In this case, we know <br /></li>
+<li>The $SS_T = SS_R-SS_{Res}$, so we get $SS_R &lt; SS_T$</li>
+<li>becasue $SS_R$ and $SS_T$ are sum of square, it will always be positive</li>
+<li>$\therefore$ the $R^2$ must be $[0,1]$</li>
+</ul>
 
 </div>
 </div>
@@ -15597,7 +15615,9 @@ VIF: 1.7723864182830404
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="q5-result">q5 result<a class="anchor-link" href="#q5-result">&#182;</a></h2><p>In the model we found 'cylinders','displacement','horsepower' and 'weight', the VIF is larger or closed to 10. We can have confidence point these are highly correlated variables. We need more statistics check in order to decide these variables should become another forms, multiplication or log or drop etc., in order to get the better model.</p>
+<h2 id="q5-result">q5 result<a class="anchor-link" href="#q5-result">&#182;</a></h2><p>While we check colinearity on the model, we know predict variables will have impact on response variables. <br />
+In the model we found 'cylinders','displacement','horsepower' and 'weight', the VIF is larger or closed to 10. <br />
+We can have confidence to say these are highly correlated variables. We need more statistics check in order to decide these variables should become another forms, multiplication or log or drop out etc., in order to get the better model.</p>
 
 </div>
 </div>
