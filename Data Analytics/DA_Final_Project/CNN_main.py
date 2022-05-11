@@ -135,6 +135,7 @@ def check_accuracy(loader, model):
     num_samples = 0
     model.eval()
 
+    
     with torch.no_grad():
         for x, y in loader:
             x = x.to(device=device)
@@ -156,7 +157,7 @@ in_channels = 3
 num_classes = 5
 learning_rate = 0.001
 batch_size = 64
-num_epochs = 10
+num_epochs = 100
 
 train, test = train_test_split(cell_df.transpose(), test_size=0.2)
 myDS = MyDataset(train)
@@ -169,6 +170,8 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
 # Train Network
+result_df = {}
+result_df[0]=0
 for epoch in range(num_epochs):
     for batch_idx, (data, targets) in enumerate(tqdm(train_loader)):
 
@@ -182,6 +185,16 @@ for epoch in range(num_epochs):
 
         # gradient descent or adam step
         optimizer.step()
+    result_df[epoch+1] = float(check_accuracy(train_loader, model))
+result_df = pd.DataFrame.from_dict(result_df, orient='index')
+result_df.plot(use_index=True,xticks=range(epoch+1))
 
 print(f"Accuracy on training set: {check_accuracy(train_loader, model)*100:.2f}")
 print(f"Accuracy on test set: {check_accuracy(test_loader, model)*100:.2f}")    
+
+from sklearn.metrics import confusion_matrix
+y_true = train_loader.dataset.y_train
+y_pred = model(train_loader.dataset.x_train).max(1)[1]
+cm = confusion_matrix(y_true,y_pred,normalize='true')
+print('The confusion matrix for each cell are \n',np.round(cm,2) )
+
