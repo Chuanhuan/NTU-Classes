@@ -44,7 +44,7 @@ zip_file = ZipFile('cropped.zip')
 # Reads a file using pillow
 dfs = {png_file.filename: 
         TF.to_tensor(
-        # np.array(
+        # np.array( # this dimension will be  rather (xx,xx,3) than (3,xx,xx)
             TF.resize(PIL.Image.open(zip_file.open(png_file.filename))
             ,size=[28,28] # CNN need to have idendical size. Size matters?
             )
@@ -85,7 +85,8 @@ class MyDataset(Dataset):
   def __init__(self,df):
 
     self.x=df[0].values
-    self.x_train = torch.from_numpy(np.stack(self.x))
+    # stack all image matrix, then use from_numpy in order to get correct format(3, xx,xx)
+    self.x_train = torch.from_numpy(np.stack(self.x)) 
     # self.x_train = torch.stack(self.x)
     unique_cell = [k for k,v in Counter(df.index).items()]
     y = np.array([unique_cell.index(i) for i in df.index])
