@@ -1,6 +1,7 @@
 
 # ID: D10546004
 # 2022 DA Final Project - Cervical cancer analysis
+# Full CNN
 
 from zipfile import ZipFile
 import numpy as np
@@ -46,7 +47,7 @@ dfs = {png_file.filename:
         TF.to_tensor(
         # np.array( # this dimension will be  rather (xx,xx,3) than (3,xx,xx)
             TF.resize(PIL.Image.open(zip_file.open(png_file.filename))
-            ,size=[28,28] # CNN need to have idendical size. Size matters?
+            ,size=[28,28] 
             )
             )
        for png_file in zip_file.infolist()
@@ -56,7 +57,7 @@ png_df = pd.DataFrame([dfs])
 
 
 
-# define gender by hand, each value for 10 pictures
+# rename all col name for short
 col_name = list(png_df.columns)
 cell_list = []
 shape_list = []
@@ -112,7 +113,7 @@ class CNN(nn.Module):
             stride=(1, 1),
             padding=(1, 1),
         )
-        self.pool = nn.MaxPool2d(kernel_size=(2, 2), stride=(2, 2))
+        # self.pool = nn.MaxPool2d(kernel_size=(2, 2), stride=(2, 2))
         self.conv2 = nn.Conv2d(
             in_channels=8,
             out_channels=16,
@@ -121,13 +122,13 @@ class CNN(nn.Module):
             padding=(1, 1),
         )
         # use 2 max pool
-        self.fc1 = nn.Linear(16 * 7 * 7, num_classes)
+        self.fc1 = nn.Linear(16 * 28 * 28, num_classes)
 
     def forward(self, x):
         x = F.relu(self.conv1(x)) #(28x28)
-        x = self.pool(x) #(14x14)
-        x = F.relu(self.conv2(x)) #(14x14)
-        x = self.pool(x) #(7x7)
+        # x = self.pool(x) #(14x14)
+        x = F.relu(self.conv2(x)) #(28x28)
+        # x = self.pool(x) #(7x7)
         x = x.reshape(x.shape[0], -1)
         x = self.fc1(x)
         return x

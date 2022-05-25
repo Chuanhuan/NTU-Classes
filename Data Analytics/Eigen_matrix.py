@@ -8,13 +8,14 @@ print(m)
 eig_value, eig_vector = np.linalg.eig(m)
 print(eig_value,eig_vector)
 # %%
+# two eig_vector product for what?
 eig_vector.dot(eig_vector.T)
 # %%
 
-# use to check the eigen vector is orthoganal is is S.P.D.
+# use to check the eigen vector is orthoganalis S.P.D.
 m = np.matrix([[1,2,3,4,1,2],[4,5,6,7,4,5],[7,8,9,9,3,4]])
 cov_m = np.cov(m)
-print(cov_m)
+print('cov', cov_m)
 eig_value, eig_vector = np.linalg.eig(cov_m)
 print('eigen value', eig_value)
 print(eig_vector)
@@ -41,7 +42,8 @@ evals, evecs = np.linalg.eig(S)
 print(evals)
 
 # %%
-print()
+
+print('proof the two eigen vector orthoganal')
 v1 = evecs[:,0] # First column is the first eigenvector
 v2 = evecs[:,1] # Second column is the second eigenvector
 v1.dot(v2) # same results
@@ -68,7 +70,28 @@ print(np.cov(m.T,rowvar=0))
 print(np.cov(m,rowvar=0))
 
 # %%
+# this not work becasue ndarray vs matrix is diff
 
+print(m.shape)
+m_bar = np.mean(m,axis=0)
+print(m_bar)
+print([float(i) for i in m_bar])
+Center_mat = m - [float(i) for i in m_bar]
+
+#%%
+# use ndarray is more easier
+import numpy as np
+
+a1 = np.array([[1,2,3],[4,5,6]])
+a1_bar = np.mean(a1,axis=0)
+print(a1_bar)
+print([float(i) for i in a1_bar])
+Center_mat = a1 - [float(i) for i in a1_bar]
+print(Center_mat)
+print(a1 - a1_bar)
+print(a1@a1.T)
+
+#%%
 # HW 6 FA
 # Read Text Files with Pandas
 
