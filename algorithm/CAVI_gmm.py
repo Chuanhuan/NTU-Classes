@@ -83,7 +83,7 @@ def plot_elbo(elbo):
     plt.savefig("ELBO.png")
     plt.show()
 
-
+# plot thecluster with oval shape correspond to one standard deviation of gaussian distribution
 # %% [markdown]
 # ## ELBO
 
