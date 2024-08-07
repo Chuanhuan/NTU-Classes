@@ -1,6 +1,5 @@
 import numpy as np
 import scipy as sp
-import seaborn as sns
 from matplotlib import pyplot as plt
 
 
@@ -101,3 +100,5 @@ plt.show()
 
 ugmm = UGMM(X, 3)
 ugmm.fit()
+print(f"mu: {mu_arr}, std: {np.std(X,axis=0)}")
+print(f"m: {ugmm.m}, std: {ugmm.s2}")
