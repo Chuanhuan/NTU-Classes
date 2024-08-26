@@ -81,7 +81,7 @@ testloader = DataLoader(testset, batch_size=1000, shuffle=True)
 
 # NOTE: load the model weights
 
-model.load_state_dict(torch.load("/content/drive/MyDrive/Colab Notebooks/CNN_MNSIT.pth"))
+model.load_state_dict(torch.load("./CNN_MNSIT.pth"))
 
 """## Inital image setup"""
 
@@ -161,6 +161,13 @@ class VI(nn.Module):
             nn.ReLU(),
             nn.Linear(10, 784),
         )
+        self.q_c = nn.Sequential(
+            nn.Linear(784, 20),
+            nn.ReLU(),
+            nn.Linear(20, 10),
+            nn.ReLU(),
+            nn.Linear(10, 784),
+        )
 
     def reparameterize(self, mu, log_var):
         # std can not be negative, thats why we use log variance
@@ -171,9 +178,10 @@ class VI(nn.Module):
     def forward(self, x):
         mu = self.q_mu(x)
         log_var = self.q_log_var(x)
-        return self.reparameterize(mu, log_var), mu, log_var
+        c = torch.sigmoid(self.q_c(x))
+        return self.reparameterize(mu, log_var), mu, log_var , c
 
-def elbo(y_pred, y, mu, log_var, model=model, predicted=predicted):
+def elbo(y_pred, y, mu, log_var, c, model=model, predicted=predicted):
     # HACK: use the CNN model predition as the input
     model.eval()
     input = y_pred.view(1, 1, 28, 28)
@@ -183,7 +191,7 @@ def elbo(y_pred, y, mu, log_var, model=model, predicted=predicted):
     log_p_y = torch.log(F.softmax(outputs, dim=1)[:, predicted])
     sigma = log_var.exp() ** 0.5
     # likelihood of observing y given Variational mu and sigma
-    likelihood = dist.Normal(mu, sigma).log_prob(y)
+    likelihood = c * dist.Normal(mu, sigma).log_prob(y)
 
     # prior probability of y_pred
     log_prior = dist.Normal(0, 1).log_prob(y_pred)
@@ -195,8 +203,8 @@ def elbo(y_pred, y, mu, log_var, model=model, predicted=predicted):
     return (log_p_y + likelihood + log_prior - log_p_q).mean()
 
 
-def det_loss(y_pred, y, mu, log_var, model=model, predicted=predicted):
-    return -elbo(y_pred, y, mu, log_var, model, predicted)
+def det_loss(y_pred, y, mu, log_var, c , model=model, predicted=predicted):
+    return -elbo(y_pred, y, mu, log_var,c , model, predicted)
 
 """### Training VI"""
 
@@ -210,9 +218,9 @@ optim = torch.optim.Adam(m.parameters(), lr=0.005)
 # Y = torch.rand(784).clone()
 
 for epoch in range(epochs+1):
-    X = torch.rand(784).clone()
+    # X = torch.rand(784).clone()
     # Y = torch.rand(784).clone()
-    # X = img.view(784).clone()
+    X = img.view(784).clone()
     Y = img.view(784).clone()
     # if epoch <= 2000:
     #   X = torch.rand(784).clone()
@@ -222,16 +230,15 @@ for epoch in range(epochs+1):
     #   Y = mu.view(784).clone().detach()
     #   Y.requires_grad = True
     optim.zero_grad()
-    y_pred, mu, log_var = m(X)
-
+    y_pred, mu, log_var, c = m(X)
     # Get the index of the max log-probability
 
-    loss = det_loss(y_pred, Y, mu, log_var, model, input[1])
+    loss = det_loss(y_pred, Y, mu, log_var, c, model, input[1])
 
     # try view different digit
     # loss = det_loss(y_pred, Y, mu, log_var, model, 3)
 
-    if epoch % 500 == 0:
+    if epoch % 10 == 0:
         print(f"epoch: {epoch}, loss: {loss}")
         Y = mu.view(784).clone().detach()
         Y.requires_grad = True
@@ -240,12 +247,13 @@ for epoch in range(epochs+1):
     # loss.backward()
     optim.step()
 
+print(torch.where(c > 0.3))
 """### Show Surrogate model"""
 
 with torch.no_grad():
     X = img.view(784).clone()
     Y = img.view(784).clone()
-    y_pred, mu, log_var = m(X)
+    y_pred, mu, log_var, c = m(X)
     print(torch.abs(y_pred - Y).mean())
 
 new_image = mu.view(1, 1, 28, 28)
@@ -262,6 +270,7 @@ plt.savefig(f"ID {img_id}-Digit {input[1]} new_image.png")
 plt.show()
 plt.clf()
 
+print(torch.where(c > 0.9))
 """### Show high variance model"""
 
 # NOTE: The model in VI evaluation
@@ -283,6 +292,8 @@ exp_values_flatten = exp_values[high_var_index[0], high_var_index[1]]
 plt.scatter(
     high_var_index[1], high_var_index[0], s=10, c=exp_values_flatten, cmap="viridis"
 )
+c_index = np.where(c.view(28, 28) > 0.9)
+plt.scatter(c_index[1], c_index[0], s=10, c="red", marker="x")
 
 # Add a colorbar to show the mapping from colors to values
 plt.title(f"Digit {input[1]} High Variance Index(> {k})")
