@@ -81,6 +81,12 @@ imshow(torchvision.utils.make_grid(images))
 print("GroundTruth: ", " ".join("%5s" % labels[j] for j in range(4)))
 
 
+image = images[5].view(1, 3, 32, 32)
+predicted = model(image).argmax().item()
+imshow(image[0])
+print("Predicted: ", classes[predicted])
+
+
 def ll_gaussian(y, mu, log_var):
     sigma = torch.exp(0.5 * log_var)
     return -0.5 * torch.log(2 * np.pi * sigma**2) - (1 / (2 * sigma**2)) * (y - mu) ** 2
