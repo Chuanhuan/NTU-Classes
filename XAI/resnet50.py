@@ -1,3 +1,4 @@
+# %%
 import torch
 import torch.nn as nn
 from torchvision import models, transforms
@@ -13,18 +14,26 @@ model = models.resnet50(pretrained=True)
 model.eval()
 print(model)
 # Define the transformation
+# NOTE: use the same transform as the training data
 # image -> 3x256x256 image -> 3x224x224 image -> tensor -> normalize
+# transform = transforms.Compose(
+#     [
+#         transforms.Resize(256),
+#         transforms.CenterCrop(224),
+#         transforms.ToTensor(),
+#         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+#     ]
+# )
 transform = transforms.Compose(
     [
-        transforms.Resize(256),
-        transforms.CenterCrop(224),
+        transforms.Resize((224, 224)),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ]
 )
 
 # Load and preprocess the images
-image_dir = os.path.expanduser("~/Documents/imagenet/imagenet_images/elephant/")
+image_dir = os.path.expanduser("~/Documents/imagenet_images/elephant/")
 image_files = [
     os.path.join(image_dir, file)
     for file in os.listdir(image_dir)
@@ -32,12 +41,12 @@ image_files = [
 ]
 
 # Load the ImageNet class names
-with open(
-    "/data/data/com.termux/files/home/Documents/imagenet/imagenet_images/imagenet-classes.txt"
-) as f:
+with open("./imagenet-classes.txt") as f:
     class_names = [line.strip() for line in f.readlines()]
 
+i = 0
 for image_file in image_files:
+    print(image_file)
     image = Image.open(image_file)
     image = transform(image).unsqueeze(0)
     # Pass the image through the model and get the top 5 predictions
@@ -45,8 +54,12 @@ for image_file in image_files:
     _, top5_preds = torch.topk(output, 5)
     # Convert the output indices to class names
     top5_preds = [class_names[idx] for idx in top5_preds[0]]
-
     print(f"Top 5 predictions for {os.path.basename(image_file)}: {top5_preds}")
+    i += 1
+    if i >= 10:
+        break
+
+# %%
 
 
 def ll_gaussian(y, mu, log_var):
