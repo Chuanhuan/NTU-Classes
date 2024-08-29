@@ -94,8 +94,16 @@ vgg.eval()
 
 # %%
 # get the image from the dataloader
-img, _ = next(iter(dataloader))
-img
+# img, _ = next(iter(dataloader))
+
+image_dir = os.path.expanduser("~/Documents/imagenet_images/elephant/")
+image_files = [
+    os.path.join(image_dir, file)
+    for file in os.listdir(image_dir)
+    if file.endswith(".jpg")
+]
+img = Image.open(image_files[0])
+img = transform(img).unsqueeze(0)
 # get the most likely prediction of the model
 pred = vgg(img).argmax(dim=1)
 
