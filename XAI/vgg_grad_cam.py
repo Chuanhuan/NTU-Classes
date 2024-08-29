@@ -2,13 +2,15 @@
 import torch
 import torch.nn as nn
 from torch.utils import data
-from torchvision.models import vgg19
+from torchvision.models import vgg19, densenet201
 from torchvision import transforms
 from torchvision import datasets
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+from PIL import Image
 
+# %%
 # use the ImageNet transformation
 transform = transforms.Compose(
     [
@@ -40,7 +42,7 @@ class VGG(nn.Module):
         super(VGG, self).__init__()
 
         # get the pretrained VGG19 network
-        self.vgg = vgg19(pretrained=True)
+        self.vgg = vgg19(weights=True)
 
         # disect the network to access its last convolutional layer
         self.features_conv = self.vgg.features[:36]
@@ -89,9 +91,11 @@ vgg = VGG()
 # set the evaluation mode
 vgg.eval()
 
+
+# %%
 # get the image from the dataloader
 img, _ = next(iter(dataloader))
-
+img
 # get the most likely prediction of the model
 pred = vgg(img).argmax(dim=1)
 
