@@ -20,18 +20,18 @@ transform = transforms.Compose(
     ]
 )
 
-dataset = datasets.ImageFolder(
-    root=os.path.expanduser("~/Documents/imagenet_images/elephant/"),
-    transform=transform,
-)
-# define a 1 image dataset
-dataset = datasets.ImageFolder(
-    root="~/Documents/imagenet_images/elephant/",
-    transform=transform,
-)
-
-# define the dataloader to load that single image
-dataloader = data.DataLoader(dataset=dataset, shuffle=False, batch_size=1)
+# dataset = datasets.ImageFolder(
+#     root=os.path.expanduser("~/Documents/imagenet_images/elephant/"),
+#     transform=transform,
+# )
+# # define a 1 image dataset
+# dataset = datasets.ImageFolder(
+#     root="~/Documents/imagenet_images/elephant/",
+#     transform=transform,
+# )
+#
+# # define the dataloader to load that single image
+# dataloader = data.DataLoader(dataset=dataset, shuffle=False, batch_size=1)
 
 
 # %%
@@ -102,19 +102,29 @@ image_files = [
     for file in os.listdir(image_dir)
     if file.endswith(".jpg")
 ]
-img = Image.open(image_files[0])
+img = Image.open(image_files[1])
 img = transform(img).unsqueeze(0)
+
 # get the most likely prediction of the model
+# Load the ImageNet class names
+with open("./imagenet-classes.txt") as f:
+    class_names = [line.strip() for line in f.readlines()]
 pred = vgg(img).argmax(dim=1)
 
+print(f"Prediction: {class_names[pred]}")
+
+# %%
 # get the gradient of the output with respect to the parameters of the model
+pred = vgg(img)
 pred[:, 386].backward()
 
 # pull the gradients out of the model
 gradients = vgg.get_activations_gradient()
+print(gradients.shape)
 
 # pool the gradients across the channels
 pooled_gradients = torch.mean(gradients, dim=[0, 2, 3])
+print(pooled_gradients.shape)
 
 # get the activations of the last convolutional layer
 activations = vgg.get_activations(img).detach()
@@ -135,16 +145,19 @@ heatmap /= torch.max(heatmap)
 
 # draw the heatmap
 plt.matshow(heatmap.squeeze())
+plt.savefig("./grad-cam-heatmap.jpg")
 
-
+# %%
 import cv2
 
-img = cv2.imread("./data/Elephant/data/05fig34.jpg")
+# img = cv2.imread("./data/Elephant/data/05fig34.jpg")
+img = cv2.imread(image_files[1])
 heatmap = cv2.resize(heatmap, (img.shape[1], img.shape[0]))
 heatmap = np.uint8(255 * heatmap)
 heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
+
 superimposed_img = heatmap * 0.4 + img
-cv2.imwrite("./map.jpg", superimposed_img)
+cv2.imwrite("./grdd-cam-map.jpg", superimposed_img)
 
 
 # %%
