@@ -26,15 +26,26 @@ class UGMM(object):
         print("Init s2")
         print(self.s2)
 
+    # def get_elbo(self):
+    #     t1 = np.log(self.s2) - self.m / self.sigma2
+    #     t1 = t1.sum()
+    #     t2 = -0.5 * np.add.outer(self.X**2, self.s2 + self.m**2)
+    #     t2 += np.outer(self.X, self.m)
+    #     t2 -= np.log(self.phi)
+    #     t2 *= self.phi
+    #     t2 = t2.sum()
+    #     return t1 + t2
     def get_elbo(self):
-        t1 = np.log(self.s2) - self.m / self.sigma2
+        t1 = -(np.log(self.s2) + self.m) / self.sigma2
         t1 = t1.sum()
         t2 = -0.5 * np.add.outer(self.X**2, self.s2 + self.m**2)
         t2 += np.outer(self.X, self.m)
-        t2 -= np.log(self.phi)
-        t2 *= self.phi
-        t2 = t2.sum()
-        return t1 + t2
+        t2 = self.phi * t2
+        t2 = np.sum(t2)
+        t3 = self.phi * np.log(self.phi)
+        t3 = -np.sum(t3)
+        t4 = 0.5 * np.log(self.s2).sum()
+        return t1 + t2 + t3 + t4
 
     def fit(self, max_iter=100, tol=1e-10):
         self._init()
@@ -48,6 +59,8 @@ class UGMM(object):
             self.elbo_values.append(self.get_elbo())
             if iter_ % 5 == 0:
                 print(iter_, self.m_history[iter_])
+                print(iter_, self.s2_history[iter_])
+                print(iter_, self.elbo_values[iter_])
             if np.abs(self.elbo_values[-2] - self.elbo_values[-1]) <= tol:
                 print(
                     "ELBO converged with ll %.3f at iteration %d"
@@ -69,12 +82,15 @@ class UGMM(object):
         self.phi = np.exp(exponent)
         self.phi = self.phi / self.phi.sum(1)[:, np.newaxis]
 
+        # FIXME: check if this is correct
+
     def _update_mu(self):
         self.m = (self.phi * self.X[:, np.newaxis]).sum(0) * (
             1 / self.sigma2 + self.phi.sum(0)
         ) ** (-1)
         assert self.m.size == self.K
         # print(self.m)
+        # FIXME:s2 update is not correct compare to outcome of the paper
         self.s2 = (1 / self.sigma2 + self.phi.sum(0)) ** (-1)
         assert self.s2.size == self.K
 
@@ -96,7 +112,7 @@ fig, ax = plt.subplots(figsize=(15, 4))
 plt.hist(X, bins=50, alpha=0.5, color="b")
 plt.hist(X[:SAMPLE], bins=50, alpha=0.5, color="r")
 plt.hist(X[SAMPLE * 2 :], bins=50, alpha=0.5, color="g")
-plt.show()
+# plt.show()
 
 ugmm = UGMM(X, 3)
 ugmm.fit()
