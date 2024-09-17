@@ -21,10 +21,10 @@ class UGMM(object):
         ).astype(float)
         self.m += self.X.max() * np.random.random(self.K)
         self.s2 = np.ones(self.K) * np.random.random(self.K)
-        print("Init mean")
-        print(self.m)
-        print("Init s2")
-        print(self.s2)
+        # print("Init mean")
+        # print(self.m)
+        # print("Init s2")
+        # print(self.s2)
 
     # def get_elbo(self):
     #     t1 = np.log(self.s2) - self.m / self.sigma2
@@ -36,7 +36,7 @@ class UGMM(object):
     #     t2 = t2.sum()
     #     return t1 + t2
     def get_elbo(self):
-        t1 = -(np.log(self.s2) + self.m) / self.sigma2
+        t1 = -0.5 * (self.s2 + self.m**2) / self.sigma2
         t1 = t1.sum()
         t2 = -0.5 * np.add.outer(self.X**2, self.s2 + self.m**2)
         t2 += np.outer(self.X, self.m)
@@ -95,6 +95,80 @@ class UGMM(object):
         assert self.s2.size == self.K
 
 
+# %%
+
+import torch
+import torch.nn as nn
+import numpy as np
+import torch.distributions as dist
+import matplotlib.pyplot as plt
+import torch.nn.functional as F
+
+
+class VI(nn.Module):
+    def __init__(self, dim, K=3):
+        super().__init__()
+        self.K = K
+        self.q_dim = dim
+        h1_dim = 20
+        h2_dim = 10
+
+        self.q_c = nn.Sequential(
+            nn.Linear(self.q_dim, h1_dim),
+            nn.ReLU(),
+            nn.Linear(h1_dim, h2_dim),
+            nn.ReLU(),
+            nn.Linear(h2_dim, self.K * self.q_dim),
+        )
+        self.q_mu = nn.Sequential(
+            nn.Linear(self.q_dim, h1_dim),
+            nn.ReLU(),
+            nn.Linear(h1_dim, h2_dim),
+            nn.ReLU(),
+            nn.Linear(h2_dim, self.K),
+        )
+        self.q_log_var = nn.Sequential(
+            nn.Linear(self.q_dim, h1_dim),
+            nn.ReLU(),
+            nn.Linear(h1_dim, h2_dim),
+            nn.ReLU(),
+            nn.Linear(h2_dim, self.K),
+        )
+
+    def reparameterize(self, mu, log_var):
+        # std can not be negative, thats why we use log variance
+        sigma = torch.exp(0.5 * log_var) + 1e-5
+        eps = torch.randn_like(sigma)
+        return mu + sigma * eps
+
+    def forward(self, x):
+        phi = self.q_c(x) ** 2
+        # print(phi.shape)
+        # phi = phi.T @ phi
+        mu = self.q_mu(x)
+        log_var = self.q_log_var(x)
+        return self.reparameterize(mu, log_var), mu, log_var, phi
+
+
+def loss_elbo(X, mu, log_var, phi):
+    # HACK: use the CNN model predition as the input
+    # log_var = log_var + 1e-5
+    phi = phi + 1e-5
+    t1 = -0.5 * (log_var.exp() + mu**2)
+    t1 = t1.sum()
+    t2 = torch.outer(X, mu) - 0.5 * X.view(-1, 1) ** 2
+    t2 = -0.5 * (log_var.exp() + mu**2).view(1, -1) + t2
+    # phi = phi.reshape(-1, 1)
+    t2 = phi * t2
+    t2 = torch.sum(t2)
+    t3 = phi * torch.log(phi)
+    t3 = -torch.sum(t3)
+    t4 = 0.5 * log_var.exp().sum()
+    # print(f't1: {t1}, t2: {t2}, t3: {t3}, t4: {t4}')
+    return -(t1 + t2 + t3 + t4)
+
+
+# %%
 num_components = 3
 mu_arr = np.random.choice(np.arange(-10, 10, 2), num_components) + np.random.random(
     num_components
@@ -113,8 +187,32 @@ plt.hist(X, bins=50, alpha=0.5, color="b")
 plt.hist(X[:SAMPLE], bins=50, alpha=0.5, color="r")
 plt.hist(X[SAMPLE * 2 :], bins=50, alpha=0.5, color="g")
 # plt.show()
-
+# %%
 ugmm = UGMM(X, 3)
 ugmm.fit()
 print(f"mu: {mu_arr}, std: {np.std(X,axis=0)}")
 print(f"m: {ugmm.m}, std: {ugmm.s2}")
+
+
+# %%
+
+epochs = 500
+m = VI(SAMPLE * num_components, 3)
+optim = torch.optim.Adam(m.parameters(), lr=0.005)
+
+X1 = torch.tensor(X, dtype=torch.float32, requires_grad=True).detach()
+for epoch in range(epochs + 1):
+    optim.zero_grad()
+    x_recon, mu, log_var, phi = m(X1)
+    phi = phi.reshape(SAMPLE * num_components, 3)
+    # Get the index of the max log-probability
+
+    loss = loss_elbo(X1, mu, log_var, phi)
+
+    if epoch % 50 == 0:
+        print(f"epoch: {epoch}, loss: {loss}")
+        print(f"mu: {mu}, log_var: {log_var}")
+
+    loss.backward(retain_graph=True)
+    # loss.backward()
+    optim.step()
