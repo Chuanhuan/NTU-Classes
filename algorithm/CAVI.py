@@ -26,6 +26,7 @@ class UGMM(object):
         # print("Init s2")
         # print(self.s2)
 
+    # NOTE:: Original code
     # def get_elbo(self):
     #     t1 = np.log(self.s2) - self.m / self.sigma2
     #     t1 = t1.sum()
@@ -35,6 +36,8 @@ class UGMM(object):
     #     t2 *= self.phi
     #     t2 = t2.sum()
     #     return t1 + t2
+
+    # NOTE:: Corrected code
     def get_elbo(self):
         t1 = -0.5 * (self.s2 + self.m**2) / self.sigma2
         t1 = t1.sum()
@@ -57,10 +60,10 @@ class UGMM(object):
             self.m_history.append(self.m)
             self.s2_history.append(self.s2)
             self.elbo_values.append(self.get_elbo())
-            if iter_ % 5 == 0:
-                print(iter_, self.m_history[iter_])
-                print(iter_, self.s2_history[iter_])
-                print(iter_, self.elbo_values[iter_])
+            # if iter_ % 5 == 0:
+            #     print(iter_, self.m_history[iter_])
+            #     print(iter_, self.s2_history[iter_])
+            #     print(iter_, self.elbo_values[iter_])
             if np.abs(self.elbo_values[-2] - self.elbo_values[-1]) <= tol:
                 print(
                     "ELBO converged with ll %.3f at iteration %d"
@@ -82,15 +85,14 @@ class UGMM(object):
         self.phi = np.exp(exponent)
         self.phi = self.phi / self.phi.sum(1)[:, np.newaxis]
 
-        # FIXME: check if this is correct
-
     def _update_mu(self):
         self.m = (self.phi * self.X[:, np.newaxis]).sum(0) * (
             1 / self.sigma2 + self.phi.sum(0)
         ) ** (-1)
         assert self.m.size == self.K
         # print(self.m)
-        # FIXME:s2 update is not correct compare to outcome of the paper
+        # NOTE:s2 update is not correct compare to output
+        # paper didn't said, but relatively small compare to samples
         self.s2 = (1 / self.sigma2 + self.phi.sum(0)) ** (-1)
         assert self.s2.size == self.K
 
@@ -118,6 +120,8 @@ class VI(nn.Module):
             nn.ReLU(),
             nn.Linear(h1_dim, h2_dim),
             nn.ReLU(),
+            nn.Linear(h2_dim, h2_dim),
+            nn.ReLU(),
             nn.Linear(h2_dim, self.K * self.q_dim),
         )
         self.q_mu = nn.Sequential(
@@ -135,35 +139,49 @@ class VI(nn.Module):
             nn.Linear(h2_dim, self.K),
         )
 
-    def reparameterize(self, mu, log_var):
+    def reparameterize(self, mu, log_var, phi):
         # std can not be negative, thats why we use log variance
         sigma = torch.exp(0.5 * log_var) + 1e-5
-        eps = torch.randn_like(sigma)
-        return mu + sigma * eps
+        sigma = sigma.unsqueeze(0)
+        mu = mu.unsqueeze(0)
+        eps = torch.randn_like(phi)
+        z = mu + sigma * eps
+        z = z * phi
+        return z.sum(dim=1)
 
     def forward(self, x):
         phi = self.q_c(x) ** 2
-        # print(phi.shape)
-        # phi = phi.T @ phi
+        phi = phi.view(self.q_dim, self.K)
+        # NOTE: softmax winner takes all
+        # phi = F.softmax(phi, dim=1)
+
+        phi = phi / phi.sum(dim=1).view(-1, 1)
+
         mu = self.q_mu(x)
         log_var = self.q_log_var(x)
-        return self.reparameterize(mu, log_var), mu, log_var, phi
+        return self.reparameterize(mu, log_var, phi), mu, log_var, phi
 
 
-def loss_elbo(X, mu, log_var, phi):
+def loss_elbo(X, mu, log_var, phi, x_recon):
     # HACK: use the CNN model predition as the input
     # log_var = log_var + 1e-5
     phi = phi + 1e-5
     t1 = -0.5 * (log_var.exp() + mu**2)
     t1 = t1.sum()
+
+    # FIXME: this is not correct, but worth to try
+    # t2 = (X - x_recon) ** 2
+    # t2 = torch.sum(t2)
+
+    # NOTE: this is correct
     t2 = torch.outer(X, mu) - 0.5 * X.view(-1, 1) ** 2
     t2 = -0.5 * (log_var.exp() + mu**2).view(1, -1) + t2
-    # phi = phi.reshape(-1, 1)
     t2 = phi * t2
     t2 = torch.sum(t2)
+
     t3 = phi * torch.log(phi)
     t3 = -torch.sum(t3)
-    t4 = 0.5 * log_var.exp().sum()
+    t4 = torch.pi * log_var.exp().sum()
     # print(f't1: {t1}, t2: {t2}, t3: {t3}, t4: {t4}')
     return -(t1 + t2 + t3 + t4)
 
@@ -190,29 +208,37 @@ plt.hist(X[SAMPLE * 2 :], bins=50, alpha=0.5, color="g")
 # %%
 ugmm = UGMM(X, 3)
 ugmm.fit()
+print("True distribution")
 print(f"mu: {mu_arr}, std: {np.std(X,axis=0)}")
-print(f"m: {ugmm.m}, std: {ugmm.s2}")
+print("CAVI result")
+print(f"m: {ugmm.m}, Var: {ugmm.s2}")
 
 
 # %%
 
-epochs = 500
+mu = None
+log_var = None
+
+epochs = 5000
 m = VI(SAMPLE * num_components, 3)
 optim = torch.optim.Adam(m.parameters(), lr=0.005)
 
-X1 = torch.tensor(X, dtype=torch.float32, requires_grad=True).detach()
 for epoch in range(epochs + 1):
+    X1 = torch.tensor(X, dtype=torch.float32, requires_grad=True).detach()
     optim.zero_grad()
     x_recon, mu, log_var, phi = m(X1)
-    phi = phi.reshape(SAMPLE * num_components, 3)
+    # phi = phi.reshape(SAMPLE * num_components, 3)
     # Get the index of the max log-probability
 
-    loss = loss_elbo(X1, mu, log_var, phi)
+    loss = loss_elbo(X1, mu, log_var, phi, x_recon)
 
-    if epoch % 50 == 0:
+    if epoch % 500 == 0:
         print(f"epoch: {epoch}, loss: {loss}")
         print(f"mu: {mu}, log_var: {log_var}")
 
     loss.backward(retain_graph=True)
     # loss.backward()
     optim.step()
+
+print("VI result")
+print(f"mu: {mu}, var: {log_var.exp()}, std: {torch.std(x_recon)}")
