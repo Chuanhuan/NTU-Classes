@@ -107,150 +107,133 @@ print(
     f"predicted probability:{F.softmax(model(input[0].unsqueeze(0)), dim=1).max():.5f}"
 )
 print(f"pixel from {img.max()} to {img.min()}")
-plt.show()
+# plt.show()
 plt.clf()
 
 # %%
 
 
-def ll_gaussian(y, mu, log_var):
-    sigma = torch.exp(0.5 * log_var)
-    return -0.5 * torch.log(2 * np.pi * sigma**2) - (1 / (2 * sigma**2)) * (y - mu) ** 2
-
-
 class VI(nn.Module):
-    def __init__(self):
+    def __init__(self, dim, K=1):
         super().__init__()
+        self.K = K
+        self.q_dim = dim
+        h1_dim = 20
+        h2_dim = 10
 
-        self.p_mu = nn.Sequential(
-            nn.Linear(784, 20),
+        self.q_c = nn.Sequential(
+            nn.Linear(self.q_dim, h1_dim),
             nn.ReLU(),
-            nn.Linear(20, 10),
+            nn.Linear(h1_dim, h2_dim),
             nn.ReLU(),
-            nn.Linear(10, 784 * 2),
+            nn.Linear(h2_dim, h2_dim),
+            nn.ReLU(),
+            nn.Linear(h2_dim, self.K * self.q_dim),
         )
-        self.p_log_var = nn.Sequential(
-            nn.Linear(784, 20),
+        self.q_mu = nn.Sequential(
+            nn.Linear(self.q_dim, h1_dim),
             nn.ReLU(),
-            nn.Linear(20, 10),
+            nn.Linear(h1_dim, h2_dim),
             nn.ReLU(),
-            nn.Linear(10, 784 * 2),
+            # nn.Linear(h2_dim, self.K),
+            nn.Linear(h2_dim, self.q_dim),
         )
-        self.p_c = nn.Sequential(
-            nn.Linear(784, 20),
+        self.q_log_var = nn.Sequential(
+            nn.Linear(self.q_dim, h1_dim),
             nn.ReLU(),
-            nn.Linear(20, 10),
+            nn.Linear(h1_dim, h2_dim),
             nn.ReLU(),
-            nn.Linear(10, 784 * 2),
+            # nn.Linear(h2_dim, self.K),
+            nn.Linear(h2_dim, self.q_dim),
         )
 
-    def reparameterize(self, mu, log_var, c):
+    def reparameterize(self, mu, log_var, phi):
         # std can not be negative, thats why we use log variance
         sigma = torch.exp(0.5 * log_var) + 1e-5
-        eps = torch.randn_like(sigma)
+        sigma = sigma.unsqueeze(0)
+        mu = mu.unsqueeze(0)
+        eps = torch.randn_like(phi)
         z = mu + sigma * eps
-        z = z.view(2, 784)
-        z = z * c
-        z = z.sum(dim=0)
-        return z
+        z = z * phi
+        # return z.sum(dim=1) + 10
+        return z.sum(dim=1)
 
     def forward(self, x):
-        mu = self.p_mu(x)
-        log_var = self.p_log_var(x)
-        c = self.p_c(x).view(2, 784)
-        c = c.softmax(dim=0)
-        return self.reparameterize(mu, log_var, c), mu, log_var, c
+        phi = self.q_c(x) ** 2
+        phi = phi.view(self.q_dim, self.K)
+        # NOTE: softmax winner takes all
+        # phi = F.softmax(phi, dim=1)
+
+        phi = phi / phi.sum(dim=1).view(-1, 1)
+
+        mu = self.q_mu(x)
+        log_var = self.q_log_var(x)
+        return self.reparameterize(mu, log_var, phi), mu, log_var, phi
 
 
-def gamma(model, mu, log_var, c, true_y=true_y):
+def loss_elbo(x, mu, log_var, phi, x_recon, model, predicted):
+    # HACK: use the CNN model predition as the input
+    # log_var = log_var + 1e-5
+    phi = phi + 1e-10
+    t1 = -0.5 * (log_var.exp() + mu**2)
+    t1 = t1.sum()
+
+    # FIXME: this is not correct, but worth to try
+    t2 = (x - x_recon) ** 2
+    t2 = -torch.sum(t2)
+
+    # NOTE: this is correct
+    # t2 = torch.outer(x, mu) - 0.5 * x.view(-1, 1) ** 2
+    # t2 = -0.5 * (log_var.exp() + mu**2).view(1, -1) + t2
+    # t2 = phi * t2
+    # t2 = torch.sum(t2)
+
+    t3 = phi * torch.log(phi)
+    t3 = -torch.sum(t3)
+    t4 = torch.pi * log_var.sum()
+    # HACK: use the CNN model predition as the input
+    # x_recon = x_recon - 10
     model.eval()
-
-    input = mu.view(2, 28, 28)
-    log_var = log_var.view(2, 784)
-    c = c.view(2, 784)
-    p_y_given_z = []
-    for i in range(2):
-        model_output = model(input[i, :, :].unsqueeze(0).unsqueeze(0))
-        p_y_given_z.append(F.softmax(model_output, dim=1)[:, true_y])
-    p_y_given_z = torch.tensor(p_y_given_z)
-    return c * p_y_given_z.unsqueeze(1)
+    input = x_recon.view(1, 1, 28, 28)
+    # Forward pass
+    outputs = model(input)
+    outputs = F.softmax(outputs, dim=1)
+    t5 = torch.log(outputs[:, predicted] + 1e-10)
+    # print(f"t1: {t1}, t2: {t2}, t3: {t3}, t4: {t4}, t5: {t5}")
+    return -(t1 + t2 + t3 + t4 - t5)
 
 
-# FIXME: loss function
-def loss_function(x_recon, x, mu, log_var, c):
-    x = (x - x.min()) / (x.max() - x.min())
-    x_recon = (x_recon - x_recon.min()) / (
-        x_recon.max() - x_recon.min()
-    )  # normalize x_recon
-
-    epsilon = 1e-7
-    xent_loss = gamma(model, mu, log_var, c) * (
-        x * torch.log(x_recon + epsilon) + (1 - x) * torch.log(1 - x_recon + epsilon)
-    )
-    xent_loss = -xent_loss.sum()
-
-    y_loss = gamma(model, mu, log_var, c).sum()
-
-    c = c.view(2, 784)
-
-    class_loss = gamma(model, mu, log_var, c) * c
-    class_loss = class_loss.sum()
-
-    mu = mu.view(2, 784)
-    log_var = log_var.view(2, 784)
-
-    kl_loss = 1 + log_var - mu.pow(2) - log_var.exp()
-    kl_loss = gamma(model, mu, log_var, c) * kl_loss
-    kl_loss = -0.5 * kl_loss.sum()
-
-    return xent_loss + kl_loss + class_loss + y_loss
-
-
-mu = torch.randn(784 * 2, requires_grad=True)
-log_var = torch.randn(784 * 2, requires_grad=True)
-c = torch.randn(784 * 2, requires_grad=True)
-x_recon = torch.randn(784, requires_grad=True)
-x = torch.randn(784, requires_grad=True)
-
-loss_function(x_recon, x, mu, log_var, c)
-# %%
-"""### Training VI"""
-
-# NOTE: Train the VI model
-# HACK: if not specify "predicted" digits, than will attack to certain become another value
+mu = None
+log_var = None
+predicted = true_y
+q_dim = 784
 epochs = 5000
-
-m = VI()
+m = VI(q_dim)
 optim = torch.optim.Adam(m.parameters(), lr=0.005)
 
-# Y = torch.rand(784).clone()
-
 for epoch in range(epochs + 1):
-    model.eval()
     x = img.view(784).clone()
     optim.zero_grad()
-    x_recon, mu, log_var, c = m(x)
+    x_recon, mu, log_var, phi = m(x)
     # Get the index of the max log-probability
-    loss = loss_function(x_recon, x, mu, log_var, c)
 
-    # try view different digit
-    # loss = det_loss(y_pred, Y, mu, log_var, model, 3)
+    loss = loss_elbo(x, mu, log_var, phi, x_recon, model, predicted)
 
-    if epoch % 50 == 0:
+    if epoch % 500 == 0:
         print(f"epoch: {epoch}, loss: {loss}")
-        x.requires_grad = True
 
     loss.backward(retain_graph=True)
     # loss.backward()
     optim.step()
 
+
 # %%
 
 
 new_image = x_recon.view(1, 1, 28, 28)
-F.softmax(model(new_image), dim=1).max()
+F.softmax(model(new_image), dim=1)
 print(
-    f"True y = {input[1]}, the highest probability: {F.softmax(model(new_image), dim=1).max():.5f}"
+    f"True y = {true_y}, the highest probability: {F.softmax(model(new_image), dim=1).max():.5f}"
 )
 predicted = torch.argmax(F.softmax(model(new_image), dim=1))
 print(f"New image full model prediction: {F.softmax(model(new_image))}")
@@ -259,7 +242,7 @@ plt.title(
     f"Digit {predicted} Surrogate model with prediction: {F.softmax(model(new_image), dim=1).max():.3f}"
 )
 plt.colorbar()
-plt.savefig(f"ID {img_id}-Digit {input[1]} new_image.png")
+plt.savefig(f"ID {img_id}-Digit {true_y} new_image.png")
 plt.show()
 plt.clf()
 
@@ -291,3 +274,135 @@ plt.colorbar(label="exp(log_var)")
 plt.savefig(f"ID {img_id}-Digit {input[1]} high_var_index {epochs} epochs({k}k).png")
 # plt.show()
 plt.clf()
+
+# %%
+# def ll_gaussian(y, mu, log_var):
+#     sigma = torch.exp(0.5 * log_var)
+#     return -0.5 * torch.log(2 * np.pi * sigma**2) - (1 / (2 * sigma**2)) * (y - mu) ** 2
+#
+#
+# class VI(nn.Module):
+#     def __init__(self):
+#         super().__init__()
+#
+#         self.p_mu = nn.Sequential(
+#             nn.Linear(784, 20),
+#             nn.ReLU(),
+#             nn.Linear(20, 10),
+#             nn.ReLU(),
+#             nn.Linear(10, 784 * 2),
+#         )
+#         self.p_log_var = nn.Sequential(
+#             nn.Linear(784, 20),
+#             nn.ReLU(),
+#             nn.Linear(20, 10),
+#             nn.ReLU(),
+#             nn.Linear(10, 784 * 2),
+#         )
+#         self.p_c = nn.Sequential(
+#             nn.Linear(784, 20),
+#             nn.ReLU(),
+#             nn.Linear(20, 10),
+#             nn.ReLU(),
+#             nn.Linear(10, 784 * 2),
+#         )
+#
+#     def reparameterize(self, mu, log_var, c):
+#         # std can not be negative, thats why we use log variance
+#         sigma = torch.exp(0.5 * log_var) + 1e-5
+#         eps = torch.randn_like(sigma)
+#         z = mu + sigma * eps
+#         z = z.view(2, 784)
+#         z = z * c
+#         z = z.sum(dim=0)
+#         return z
+#
+#     def forward(self, x):
+#         mu = self.p_mu(x)
+#         log_var = self.p_log_var(x)
+#         c = self.p_c(x).view(2, 784)
+#         c = c.softmax(dim=0)
+#         return self.reparameterize(mu, log_var, c), mu, log_var, c
+#
+#
+# def gamma(model, mu, log_var, c, true_y=true_y):
+#     model.eval()
+#
+#     input = mu.view(2, 28, 28)
+#     log_var = log_var.view(2, 784)
+#     c = c.view(2, 784)
+#     p_y_given_z = []
+#     for i in range(2):
+#         model_output = model(input[i, :, :].unsqueeze(0).unsqueeze(0))
+#         p_y_given_z.append(F.softmax(model_output, dim=1)[:, true_y])
+#     p_y_given_z = torch.tensor(p_y_given_z)
+#     return c * p_y_given_z.unsqueeze(1)
+#
+#
+# # FIXME: loss function
+# def loss_function(x_recon, x, mu, log_var, c):
+#     x = (x - x.min()) / (x.max() - x.min())
+#     x_recon = (x_recon - x_recon.min()) / (
+#         x_recon.max() - x_recon.min()
+#     )  # normalize x_recon
+#
+#     epsilon = 1e-7
+#     xent_loss = gamma(model, mu, log_var, c) * (
+#         x * torch.log(x_recon + epsilon) + (1 - x) * torch.log(1 - x_recon + epsilon)
+#     )
+#     xent_loss = -xent_loss.sum()
+#
+#     y_loss = gamma(model, mu, log_var, c).sum()
+#
+#     c = c.view(2, 784)
+#
+#     class_loss = gamma(model, mu, log_var, c) * c
+#     class_loss = class_loss.sum()
+#
+#     mu = mu.view(2, 784)
+#     log_var = log_var.view(2, 784)
+#
+#     kl_loss = 1 + log_var - mu.pow(2) - log_var.exp()
+#     kl_loss = gamma(model, mu, log_var, c) * kl_loss
+#     kl_loss = -0.5 * kl_loss.sum()
+#
+#     return xent_loss + kl_loss + class_loss + y_loss
+#
+#
+# mu = torch.randn(784 * 2, requires_grad=True)
+# log_var = torch.randn(784 * 2, requires_grad=True)
+# c = torch.randn(784 * 2, requires_grad=True)
+# x_recon = torch.randn(784, requires_grad=True)
+# x = torch.randn(784, requires_grad=True)
+#
+# loss_function(x_recon, x, mu, log_var, c)
+# # %%
+# """### Training VI"""
+#
+# # NOTE: Train the VI model
+# # HACK: if not specify "predicted" digits, than will attack to certain become another value
+# epochs = 5000
+#
+# m = VI()
+# optim = torch.optim.Adam(m.parameters(), lr=0.005)
+#
+# # Y = torch.rand(784).clone()
+#
+# for epoch in range(epochs + 1):
+#     model.eval()
+#     x = img.view(784).clone()
+#     optim.zero_grad()
+#     x_recon, mu, log_var, c = m(x)
+#     # Get the index of the max log-probability
+#     loss = loss_function(x_recon, x, mu, log_var, c)
+#
+#     # try view different digit
+#     # loss = det_loss(y_pred, Y, mu, log_var, model, 3)
+#
+#     if epoch % 50 == 0:
+#         print(f"epoch: {epoch}, loss: {loss}")
+#         x.requires_grad = True
+#
+#     loss.backward(retain_graph=True)
+#     # loss.backward()
+#     optim.step()

@@ -165,7 +165,7 @@ class VI(nn.Module):
 def loss_elbo(X, mu, log_var, phi, x_recon):
     # HACK: use the CNN model predition as the input
     # log_var = log_var + 1e-5
-    phi = phi + 1e-5
+    phi = phi + 1e-10
     t1 = -0.5 * (log_var.exp() + mu**2)
     t1 = t1.sum()
 
@@ -181,7 +181,7 @@ def loss_elbo(X, mu, log_var, phi, x_recon):
 
     t3 = phi * torch.log(phi)
     t3 = -torch.sum(t3)
-    t4 = torch.pi * log_var.exp().sum()
+    t4 = torch.pi * log_var.sum()
     # print(f't1: {t1}, t2: {t2}, t3: {t3}, t4: {t4}')
     return -(t1 + t2 + t3 + t4)
 
