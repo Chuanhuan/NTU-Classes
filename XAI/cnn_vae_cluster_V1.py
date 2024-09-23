@@ -94,7 +94,7 @@ model.load_state_dict(torch.load("./CNN_MNSIT.pth", weights_only=True))
 """## Inital image setup"""
 
 img_id = 3
-input = testset_8[img_id]
+input = testset_8[img_id].to(device)
 img = input[0].squeeze(0).clone()
 true_y = input[1]
 # img = transform(img)
@@ -114,7 +114,7 @@ plt.clf()
 
 
 class VI(nn.Module):
-    def __init__(self, dim, K=1):
+    def __init__(self, dim, K=2):
         super().__init__()
         self.K = K
         self.q_dim = dim
@@ -135,16 +135,24 @@ class VI(nn.Module):
             nn.ReLU(),
             nn.Linear(h1_dim, h2_dim),
             nn.ReLU(),
-            # nn.Linear(h2_dim, self.K),
-            nn.Linear(h2_dim, self.q_dim),
+            nn.Linear(h2_dim, self.K),
+            # nn.Linear(h2_dim, self.q_dim),
         )
         self.q_log_var = nn.Sequential(
             nn.Linear(self.q_dim, h1_dim),
             nn.ReLU(),
             nn.Linear(h1_dim, h2_dim),
             nn.ReLU(),
-            # nn.Linear(h2_dim, self.K),
+            nn.Linear(h2_dim, self.K),
+            # nn.Linear(h2_dim, self.q_dim),
+        )
+        self.mu_y = nn.Sequential(
+            nn.Linear(self.q_dim, h1_dim),
+            nn.ReLU(),
+            nn.Linear(h1_dim, h2_dim),
+            nn.ReLU(),
             nn.Linear(h2_dim, self.q_dim),
+            # nn.Linear(h2_dim, 1),
         )
 
     def reparameterize(self, mu, log_var, phi):
@@ -162,35 +170,95 @@ class VI(nn.Module):
         phi = self.q_c(x) ** 2
         phi = phi.view(self.q_dim, self.K)
         # NOTE: softmax winner takes all
-        # phi = F.softmax(phi, dim=1)
+        phi = F.softmax(phi, dim=1)
 
-        phi = phi / phi.sum(dim=1).view(-1, 1)
+        # phi = phi / phi.sum(dim=1).view(-1, 1)
 
         mu = self.q_mu(x)
         log_var = self.q_log_var(x)
-        return self.reparameterize(mu, log_var, phi), mu, log_var, phi
+        z = self.reparameterize(mu, log_var, phi)
+        mu_y = self.mu_y(z)
+        return z, mu, log_var, phi, mu_y
+
+
+# %%
 
 
 def loss_elbo(x, mu, log_var, phi, x_recon, model, predicted):
     # HACK: use the CNN model predition as the input
     # log_var = log_var + 1e-5
     phi = phi + 1e-10
-    t1 = -0.5 * (log_var.exp() + mu**2)
+    high_mu_index = mu.argmax()
+    high_phi_index = phi[:, high_mu_index] > 0.5
+    lamb = (high_phi_index > 0.5).sum()
+
+    t1 = -0.5 * (mu.view(1, -1) - mu_y.view(-1, 1)) ** 2
+    t1 = phi * t1
+    # t1 = t1.mean()
     t1 = t1.sum()
 
-    # FIXME: this is not correct, but worth to try
-    t2 = (x - x_recon) ** 2
-    t2 = -torch.sum(t2)
+    # t1 = torch.outer(mu_y, mu) - 0.5 * mu.view(1, -1) **2
+    # t1 = -0.5  * (log_var.exp() + mu**2).view(1, -1) + t1
+    # t1 = phi * t1
+    # t1 = t1.sum()
+
+    # NOTE: Alternative implementation
+    # t2 = 0.5 * (x - x_recon) ** 2
+    # t2 = -torch.mean(t2)
+    # t2_1 = 0.5 * (x - x_recon) ** 2
+    # t2_1 = -torch.mean(t2_1[high_mu_index])
 
     # NOTE: this is correct
-    # t2 = torch.outer(x, mu) - 0.5 * x.view(-1, 1) ** 2
-    # t2 = -0.5 * (log_var.exp() + mu**2).view(1, -1) + t2
-    # t2 = phi * t2
-    # t2 = torch.sum(t2)
+    t2 = torch.outer(x, mu) - 0.5 * x.view(-1, 1) ** 2
+    t2 = -0.5 * (log_var.exp() + mu**2).view(1, -1) + t2
+    t2 = phi * t2
+    # t2 = torch.mean(t2)
+    t2 = torch.sum(t2)
 
+    # t3 = -torch.log(phi).mean()
     t3 = phi * torch.log(phi)
     t3 = -torch.sum(t3)
+
+    # t4 = 0.5 * log_var.mean()
     t4 = torch.pi * log_var.sum()
+
+    # HACK: use the CNN model predition as the input
+    # x_recon = x_recon - 10
+    model.eval()
+    input = x_recon.view(1, 1, 28, 28)
+    # Forward pass
+    outputs = model(input)
+    outputs = F.softmax(outputs, dim=1)
+    outputs = torch.clamp(outputs, 1e-5, 1 - 1e-5)
+    t5 = torch.log(outputs[:, predicted])
+    # print(f't1: {t1}, t2: {t2}, t3: {t3}, t4: {t4}, t5: {t5}, lamb: {lamb}')
+    return -(t1 + t2 + t3 + t4 - t5)
+    # return (t1 + t2  + t3 + t4) * (t5)
+
+
+# %%
+
+
+def ll_gaussian(x, mu, log_var):
+    sigma = torch.exp(0.5 * log_var)
+    return -0.5 * torch.log(2 * np.pi * sigma**2) - (1 / (2 * sigma**2)) * (x - mu) ** 2
+
+
+def loss_gau_elbo(x, mu, log_var, phi, x_recon, model, predicted):
+    phi = phi + 1e-10
+    t1 = ll_gaussian(x_recon, torch.tensor(0), torch.tensor(0))
+    t1 = phi * t1
+    t1 = torch.mean(t1)
+
+    t2 = ll_gaussian(x, x_recon, torch.tensor(0))
+    t2 = phi * t2
+    t2 = torch.mean(t2)
+
+    t3 = phi * torch.log(phi)
+    t3 = -torch.mean(t3)
+
+    t4 = ll_gaussian(x_recon, mu, log_var)
+    t4 = torch.mean(t4)
     # HACK: use the CNN model predition as the input
     # x_recon = x_recon - 10
     model.eval()
@@ -203,21 +271,55 @@ def loss_elbo(x, mu, log_var, phi, x_recon, model, predicted):
     return -(t1 + t2 + t3 + t4 - t5)
 
 
+# %%
+def loss_cluster_elbo(x, mu, log_var, phi, x_recon, model, predicted):
+    lamb = 25
+    phi = phi + 1e-5
+    x1 = x.view(-1, 1) * phi
+    x1 = x1.sum(dim=1)
+
+    t1 = (x - x_recon) ** 2
+    t1 = -torch.mean(t1)
+
+    # t2 = log_var.exp().view(-1, 1) + x_recon.view(1,-1) ** 2
+    # t2 = log_var.exp().view(-1, 1)
+    # t2 = phi * t2
+    # t2 = torch.mean(t2)
+
+    t3 = phi * torch.log(phi)
+    t3 = -torch.mean(t3)
+    model.eval()
+    # input = x_recon.view(1, 1, 28, 28)
+    input = x1.view(1, 1, 28, 28)
+    # Forward pass
+    outputs = model(input)
+    outputs = F.softmax(outputs, dim=1)
+    outputs = torch.clamp(outputs, 1e-5, 1 - 1e-5)
+    t5 = torch.log(outputs[:, predicted])
+
+    # return -(t1 * lamb) * (-t5)
+    return (-t5) + t3
+
+
+# %%
+
 mu = None
 log_var = None
 predicted = true_y
 q_dim = 784
 epochs = 5000
-m = VI(q_dim)
+m = VI(q_dim, 10).to(device)
 optim = torch.optim.Adam(m.parameters(), lr=0.005)
 
 for epoch in range(epochs + 1):
-    x = img.view(784).clone()
+    x = img.view(784).clone().to(device)
     optim.zero_grad()
-    x_recon, mu, log_var, phi = m(x)
+    x_recon, mu, log_var, phi, mu_y = m(x)
     # Get the index of the max log-probability
 
     loss = loss_elbo(x, mu, log_var, phi, x_recon, model, predicted)
+    # loss = loss_gau_elbo(x, mu, log_var, phi, x_recon, model, predicted)
+    # loss = loss_cluster_elbo(x, mu, log_var, phi, x_recon, model, predicted)
 
     if epoch % 500 == 0:
         print(f"epoch: {epoch}, loss: {loss}")
@@ -226,183 +328,109 @@ for epoch in range(epochs + 1):
     # loss.backward()
     optim.step()
 
+print(f"x.max(): {x.max()}, x.min(): {x.min()}")
+print(f"mu.max(): {mu.max()}, mu.min(): {mu.min()}")
+print(f"mu_y.max(): {mu_y.max()}, mu_y.min(): {mu_y.min()}")
+print(f"var.max(): {log_var.exp().max()}, var.min(): {log_var.exp().min()}")
+print(f"prob: {F.softmax(model(x_recon.view(1, 1, 28, 28)), dim=1)}")
+
 
 # %%
 
 
 new_image = x_recon.view(1, 1, 28, 28)
-F.softmax(model(new_image), dim=1)
+# new_image = mu_y.view(1, 1, 28, 28)
+x_recon_pred = torch.argmax(F.softmax(model(new_image), dim=1))
 print(
-    f"True y = {true_y}, the highest probability: {F.softmax(model(new_image), dim=1).max():.5f}"
+    f"True y = {true_y}. New image full model prediction: {F.softmax(model(new_image))}"
 )
-predicted = torch.argmax(F.softmax(model(new_image), dim=1))
-print(f"New image full model prediction: {F.softmax(model(new_image))}")
 plt.imshow(new_image.squeeze(0).squeeze(0).detach().numpy(), cmap="gray")
 plt.title(
-    f"Digit {predicted} Surrogate model with prediction: {F.softmax(model(new_image), dim=1).max():.3f}"
+    f"Digit {x_recon_pred} Surrogate model with prediction: {F.softmax(model(new_image), dim=1).max():.3f}"
 )
 plt.colorbar()
-plt.savefig(f"ID {img_id}-Digit {true_y} new_image.png")
+plt.savefig(f"ID {img_id}-Digit {true_y} pred {x_recon_pred} new_image.png")
 plt.show()
 plt.clf()
 
 # %%
 # NOTE: The model in VI evaluation
-print(f"Max variance: {log_var.exp().max()}")
-log_var = log_var.view(2, 784)
-highest_var = log_var[0].exp().max()
-k = 0.7
-high_var_index = np.where(log_var[0].view(28, 28).exp() > highest_var * k)
+k = 0.5
+high_phi_index = np.where(phi[:, mu.argmax()].view(28, 28) > k)
+
+print(f"number of high_phi_index:{high_phi_index[0].size}")
+
 plt.imshow(img.clone().detach().numpy(), cmap="gray")
 plt.colorbar()
-# plt.scatter(high_var_index[1], high_var_index[0], s=10, c="red")
-# Assume log_var is a tensor and you compute its exponential
-exp_values = log_var[0].view(28, 28).exp()
-
-# Flatten the tensor to 1D for scatter plot
-exp_values_flatten = exp_values[high_var_index[0], high_var_index[1]]
 
 
 # Scatter plot with colors corresponding to exp_values
 plt.scatter(
-    high_var_index[1], high_var_index[0], s=10, c=exp_values_flatten, cmap="viridis"
+    # high_var_index[1], high_var_index[0], s=10, c=exp_values_flatten, cmap="viridis"
+    high_phi_index[1],
+    high_phi_index[0],
+    s=10,
+    cmap="viridis",
 )
 
 # Add a colorbar to show the mapping from colors to values
-plt.title(f"Digit {input[1]} Highies Variance {highest_var:.4f}(k> {k})")
-plt.colorbar(label="exp(log_var)")
-plt.savefig(f"ID {img_id}-Digit {input[1]} high_var_index {epochs} epochs({k}k).png")
-# plt.show()
+plt.title(
+    f"Digit {x_recon_pred} Surrogate model with prediction: {F.softmax(model(new_image), dim=1).max():.3f}"
+)
+plt.savefig(
+    f"ID {img_id}-Digit {true_y} pred {x_recon_pred} with {epochs} epochs({k}k).png"
+)
+plt.show()
 plt.clf()
 
 # %%
-# def ll_gaussian(y, mu, log_var):
-#     sigma = torch.exp(0.5 * log_var)
-#     return -0.5 * torch.log(2 * np.pi * sigma**2) - (1 / (2 * sigma**2)) * (y - mu) ** 2
-#
-#
-# class VI(nn.Module):
-#     def __init__(self):
-#         super().__init__()
-#
-#         self.p_mu = nn.Sequential(
-#             nn.Linear(784, 20),
-#             nn.ReLU(),
-#             nn.Linear(20, 10),
-#             nn.ReLU(),
-#             nn.Linear(10, 784 * 2),
-#         )
-#         self.p_log_var = nn.Sequential(
-#             nn.Linear(784, 20),
-#             nn.ReLU(),
-#             nn.Linear(20, 10),
-#             nn.ReLU(),
-#             nn.Linear(10, 784 * 2),
-#         )
-#         self.p_c = nn.Sequential(
-#             nn.Linear(784, 20),
-#             nn.ReLU(),
-#             nn.Linear(20, 10),
-#             nn.ReLU(),
-#             nn.Linear(10, 784 * 2),
-#         )
-#
-#     def reparameterize(self, mu, log_var, c):
-#         # std can not be negative, thats why we use log variance
-#         sigma = torch.exp(0.5 * log_var) + 1e-5
-#         eps = torch.randn_like(sigma)
-#         z = mu + sigma * eps
-#         z = z.view(2, 784)
-#         z = z * c
-#         z = z.sum(dim=0)
-#         return z
-#
-#     def forward(self, x):
-#         mu = self.p_mu(x)
-#         log_var = self.p_log_var(x)
-#         c = self.p_c(x).view(2, 784)
-#         c = c.softmax(dim=0)
-#         return self.reparameterize(mu, log_var, c), mu, log_var, c
-#
-#
-# def gamma(model, mu, log_var, c, true_y=true_y):
-#     model.eval()
-#
-#     input = mu.view(2, 28, 28)
-#     log_var = log_var.view(2, 784)
-#     c = c.view(2, 784)
-#     p_y_given_z = []
-#     for i in range(2):
-#         model_output = model(input[i, :, :].unsqueeze(0).unsqueeze(0))
-#         p_y_given_z.append(F.softmax(model_output, dim=1)[:, true_y])
-#     p_y_given_z = torch.tensor(p_y_given_z)
-#     return c * p_y_given_z.unsqueeze(1)
-#
-#
-# # FIXME: loss function
-# def loss_function(x_recon, x, mu, log_var, c):
-#     x = (x - x.min()) / (x.max() - x.min())
-#     x_recon = (x_recon - x_recon.min()) / (
-#         x_recon.max() - x_recon.min()
-#     )  # normalize x_recon
-#
-#     epsilon = 1e-7
-#     xent_loss = gamma(model, mu, log_var, c) * (
-#         x * torch.log(x_recon + epsilon) + (1 - x) * torch.log(1 - x_recon + epsilon)
-#     )
-#     xent_loss = -xent_loss.sum()
-#
-#     y_loss = gamma(model, mu, log_var, c).sum()
-#
-#     c = c.view(2, 784)
-#
-#     class_loss = gamma(model, mu, log_var, c) * c
-#     class_loss = class_loss.sum()
-#
-#     mu = mu.view(2, 784)
-#     log_var = log_var.view(2, 784)
-#
-#     kl_loss = 1 + log_var - mu.pow(2) - log_var.exp()
-#     kl_loss = gamma(model, mu, log_var, c) * kl_loss
-#     kl_loss = -0.5 * kl_loss.sum()
-#
-#     return xent_loss + kl_loss + class_loss + y_loss
-#
-#
-# mu = torch.randn(784 * 2, requires_grad=True)
-# log_var = torch.randn(784 * 2, requires_grad=True)
-# c = torch.randn(784 * 2, requires_grad=True)
-# x_recon = torch.randn(784, requires_grad=True)
-# x = torch.randn(784, requires_grad=True)
-#
-# loss_function(x_recon, x, mu, log_var, c)
-# # %%
-# """### Training VI"""
-#
-# # NOTE: Train the VI model
-# # HACK: if not specify "predicted" digits, than will attack to certain become another value
-# epochs = 5000
-#
-# m = VI()
-# optim = torch.optim.Adam(m.parameters(), lr=0.005)
-#
-# # Y = torch.rand(784).clone()
-#
-# for epoch in range(epochs + 1):
-#     model.eval()
-#     x = img.view(784).clone()
-#     optim.zero_grad()
-#     x_recon, mu, log_var, c = m(x)
-#     # Get the index of the max log-probability
-#     loss = loss_function(x_recon, x, mu, log_var, c)
-#
-#     # try view different digit
-#     # loss = det_loss(y_pred, Y, mu, log_var, model, 3)
-#
-#     if epoch % 50 == 0:
-#         print(f"epoch: {epoch}, loss: {loss}")
-#         x.requires_grad = True
-#
-#     loss.backward(retain_graph=True)
-#     # loss.backward()
-#     optim.step()
+
+# NOTE: THe cluster in VI evaluation
+clusters = phi.argmax(1).view(28, 28)
+plt.imshow(clusters.clone().detach().numpy(), cmap="viridis")
+
+
+plt.savefig(
+    f"Cluster-ID {img_id}-Digit {true_y} pred {x_recon_pred} with {epochs} epochs({k}k).png"
+)
+print(f"mu: {mu}")
+
+
+def img_mask_func(img, mu, true_y=true_y, x_recon_pred=x_recon_pred):
+    for i in range(mu.shape.__getitem__(0)):
+        mask_img = img.clone().detach()
+        mask_img = (clusters == i) * mask_img
+        model.eval()
+        output = F.softmax(model(mask_img.view(1, 1, 28, 28)), dim=1)
+        print(f"prob: {F.softmax(model(mask_img.view(1, 1, 28, 28)), dim=1)}")
+        if output.max() > 0.5:
+            print(f"Cluster {i} has a prediction")
+            plt.imshow(mask_img.squeeze(0).squeeze(0).detach().numpy(), cmap="gray")
+            plt.savefig(
+                f"ID {img_id}-Digit {true_y} pred {x_recon_pred} cluster {i} mask_image.png"
+            )
+            plt.show()
+            plt.clf()
+
+
+img_mask_func(img, mu)
+
+# %%
+
+mask_img = img.clone().detach()
+
+
+# mask_img[i, j] = img.min()
+def img_mask_func(img, high_phi_index):
+    for k in range(high_phi_index[0].size):
+        for i in range(0, 1, 1):
+            for j in range(0, 1, 1):
+                mask_img[high_phi_index[0][k] + i, high_phi_index[1][k] + j] = img.min()
+    return img
+
+
+mask_img = img_mask_func(mask_img, high_phi_index)
+# mask_img[high_phi_index] = img.min()
+print(f"prob: {F.softmax(model(mask_img.view(1, 1, 28, 28)), dim=1)}")
+plt.imshow(mask_img.squeeze(0).squeeze(0).detach().numpy(), cmap="gray")
+plt.savefig(f"ID {img_id}-Digit {true_y} mask_image.png")

@@ -171,7 +171,7 @@ def loss_elbo(X, mu, log_var, phi, x_recon):
 
     # FIXME: this is not correct, but worth to try
     # t2 = (X - x_recon) ** 2
-    # t2 = torch.sum(t2)
+    # t2 = -torch.sum(t2)
 
     # NOTE: this is correct
     t2 = torch.outer(X, mu) - 0.5 * X.view(-1, 1) ** 2
@@ -179,9 +179,12 @@ def loss_elbo(X, mu, log_var, phi, x_recon):
     t2 = phi * t2
     t2 = torch.sum(t2)
 
-    t3 = phi * torch.log(phi)
-    t3 = -torch.sum(t3)
-    t4 = torch.pi * log_var.sum()
+    # NOTE:mean or sum has no effect. mean!
+    # t3 = phi * torch.log(phi)
+    # t3 = -torch.sum(t3)
+    t3 = torch.log(phi).mean()
+
+    t4 = 0.5 * log_var.sum()
     # print(f't1: {t1}, t2: {t2}, t3: {t3}, t4: {t4}')
     return -(t1 + t2 + t3 + t4)
 
