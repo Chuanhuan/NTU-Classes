@@ -94,7 +94,7 @@ model.load_state_dict(torch.load("./CNN_MNSIT.pth", weights_only=True))
 """## Inital image setup"""
 
 img_id = 3
-input = testset_8[img_id].to(device)
+input = testset_8[img_id]
 img = input[0].squeeze(0).clone()
 true_y = input[1]
 # img = transform(img)
@@ -274,23 +274,28 @@ def loss_gau_elbo(x, mu, log_var, phi, x_recon, model, predicted):
 # %%
 def loss_cluster_elbo(x, mu, log_var, phi, x_recon, model, predicted):
     lamb = 25
-    phi = phi + 1e-5
     x1 = x.view(-1, 1) * phi
-    x1 = x1.sum(dim=1)
+    binary_array = torch.randint(0, 2, (784, 2))
+    phi = (phi > 0.5).int()
 
-    t1 = (x - x_recon) ** 2
-    t1 = -torch.mean(t1)
+    # x1 = x1.sum(dim=1)
+
+    # t1 = (x - x_recon) ** 2
+    # t1 = -torch.mean(t1)
 
     # t2 = log_var.exp().view(-1, 1) + x_recon.view(1,-1) ** 2
     # t2 = log_var.exp().view(-1, 1)
     # t2 = phi * t2
     # t2 = torch.mean(t2)
+    t2 = 0.5 * (x - x1[:, 0]) ** 2
+    t2 = -torch.sum(t2)
 
+    phi = phi + 1e-5
     t3 = phi * torch.log(phi)
     t3 = -torch.mean(t3)
     model.eval()
     # input = x_recon.view(1, 1, 28, 28)
-    input = x1.view(1, 1, 28, 28)
+    input = x1[:, 0].view(1, 1, 28, 28)
     # Forward pass
     outputs = model(input)
     outputs = F.softmax(outputs, dim=1)
@@ -298,7 +303,7 @@ def loss_cluster_elbo(x, mu, log_var, phi, x_recon, model, predicted):
     t5 = torch.log(outputs[:, predicted])
 
     # return -(t1 * lamb) * (-t5)
-    return (-t5) + t3
+    return -(t2 + t3 - t5)
 
 
 # %%
@@ -307,8 +312,8 @@ mu = None
 log_var = None
 predicted = true_y
 q_dim = 784
-epochs = 5000
-m = VI(q_dim, 10).to(device)
+epochs = 2000
+m = VI(q_dim, 2).to(device)
 optim = torch.optim.Adam(m.parameters(), lr=0.005)
 
 for epoch in range(epochs + 1):
@@ -317,9 +322,9 @@ for epoch in range(epochs + 1):
     x_recon, mu, log_var, phi, mu_y = m(x)
     # Get the index of the max log-probability
 
-    loss = loss_elbo(x, mu, log_var, phi, x_recon, model, predicted)
+    # loss = loss_elbo(x, mu, log_var, phi, x_recon, model, predicted)
     # loss = loss_gau_elbo(x, mu, log_var, phi, x_recon, model, predicted)
-    # loss = loss_cluster_elbo(x, mu, log_var, phi, x_recon, model, predicted)
+    loss = loss_cluster_elbo(x, mu, log_var, phi, x_recon, model, predicted)
 
     if epoch % 500 == 0:
         print(f"epoch: {epoch}, loss: {loss}")
