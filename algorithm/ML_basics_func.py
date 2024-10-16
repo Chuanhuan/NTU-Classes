@@ -1,11 +1,12 @@
 # %%
+# SECTION: ML basic functions. Import packages
 
 import numpy as np
 import torch
 import torch.nn.functional as F
 import torch.nn as nn
 import torch.optim as optim
-
+import matplotlib.pyplot as plt
 
 # %%
 # SECTION:category cross-entropy
@@ -204,7 +205,7 @@ print(f"x0: {x0}, x1: {x1}, x2: {x2}")
 
 # SECTION: Gradient computation
 # Step 1: Create a tensor with requires_grad=True
-x = torch.tensor(2.0, requires_grad=True)
+x = torch.tensor(1.5, requires_grad=True)
 
 # Step 3: Define the function f(x) = x^2
 f = x**2
@@ -351,3 +352,51 @@ scaled_probabilities = apply_temperature_scaling(logits, temperature)
 
 print("Original logits:\n", logits)
 print("Scaled probabilities after temperature scaling:\n", scaled_probabilities)
+
+# %%
+
+# SECTION: Dirac delta function
+
+
+# Define the Gaussian function to approximate the Dirac delta function
+def gaussian(x, mu, sigma):
+    return (1 / (sigma * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((x - mu) / sigma) ** 2)
+
+
+# Define a simple function (e.g., sine wave)
+def simple_function(x):
+    return np.sin(x)
+
+
+# Define the range and parameters
+x = np.linspace(-10, 10, 1000)
+mu = 0  # Mean of the Gaussian (centered at zero)
+sigma = 0.1  # Small standard deviation to approximate Dirac delta
+
+# Calculate the Gaussian and simple function values
+gaussian_values = gaussian(x, mu, sigma)
+simple_function_values = simple_function(x)
+
+# Plot the Gaussian function
+plt.figure(figsize=(12, 6))
+plt.plot(
+    x, gaussian_values, label="Gaussian Approximation of Dirac Delta", color="blue"
+)
+plt.title("Gaussian Approximation of Dirac Delta Function")
+plt.xlabel("x")
+plt.ylabel("Amplitude")
+plt.legend()
+plt.grid(True)
+plt.savefig("./fig/gaussian_approximation.png")
+plt.show()
+
+# Plot the simple function
+plt.figure(figsize=(12, 6))
+plt.plot(x, simple_function_values, label="Simple Function (sin(x))", color="green")
+plt.title("Simple Function (sin(x))")
+plt.xlabel("x")
+plt.ylabel("Amplitude")
+plt.legend()
+plt.grid(True)
+plt.savefig("./fig/simple_function.png")
+plt.show()
